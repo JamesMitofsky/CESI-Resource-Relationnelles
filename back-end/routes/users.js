@@ -96,10 +96,12 @@ router.get('/:id', getUser, (req, res) => {
 router.put('/:id', getUser, async (req, res) => {
   const { name, firstName, password, phone, email, healthCard, role, accountStatus, sharedResources, groups } = req.body;
 
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   if (name != null) {
     res.user.name = name;
     res.user.firstName = firstName; 
-    res.user.password = password;  
+    res.user.password = hashedPassword;  
     res.user.phone = phone;
     res.user.email = email;
     res.user.healthCard = healthCard;
