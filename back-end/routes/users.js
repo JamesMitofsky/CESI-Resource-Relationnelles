@@ -1,10 +1,48 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const secretOrKey = process.env.SECRET_OR_KEY;
+
 // Load User model
 const User = require('../models/User');
+
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+  
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ email: 'User not found' });
+    }
+  
+    // Check password
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        // User matched
+        // Create JWT payload
+        const payload = { id: user.id, name: user.name };
+  
+        // Sign token
+        jwt.sign(
+          payload,
+          secretOrKey,
+          { expiresIn: 3600 }, // 1 hour in seconds
+          (err, token) => {
+            res.json({
+              success: true,
+              token: 'Bearer ' + token
+            });
+          }
+        );
+      } else {
+        return res.status(400).json({ password: 'Password incorrect' });
+      }
+    });
+  });
+  
 
 // @route   POST api/users
 // @desc    Register a user
