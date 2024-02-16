@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // Load User model
 const User = require('../models/User');
@@ -9,10 +11,14 @@ const User = require('../models/User');
 router.post('/', async (req, res) => {
   const { name, firstName, password, phone, email, healthCard, role, accountStatus, sharedResources, groups } = req.body;
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+
   const newUser = new User({
     name,
     firstName,
-    password, // In a real-world application, make sure to hash the password before storing it
+    password: hashedPassword,
     phone,
     email,
     healthCard,
