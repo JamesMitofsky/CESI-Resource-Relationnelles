@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const resources = await Resource.find();
-    res.json(resources);
+     res.json(resources);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
