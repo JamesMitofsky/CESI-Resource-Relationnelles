@@ -49,6 +49,12 @@ router.post('/login', async (req, res) => {
 router.post('/', async (req, res) => {
   const { name, firstName, password, phone, email, healthCard, role, accountStatus, sharedResources, groups } = req.body;
 
+
+    // Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -125,7 +131,7 @@ router.put('/:id', getUser, async (req, res) => {
 // @desc    Delete a user
 router.delete('/:id', getUser, async (req, res) => {
   try {
-    await res.user.remove();
+    await res.user.deleteOne();
     res.json({ message: 'Deleted User' });
   } catch (err) {
     res.status(500).json({ error: err.message });

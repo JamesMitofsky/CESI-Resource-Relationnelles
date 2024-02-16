@@ -29,10 +29,12 @@ const UserSchema = new Schema({
   role: {
     type: String,
     required: true,
+    default: "user",
   },
   accountStatus: {
     type: String,
     required: true,
+    default: "active",
   },
   sharedResources: [{
     type: Schema.Types.ObjectId,

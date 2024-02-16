@@ -83,7 +83,7 @@ router.put('/:id', getResource, async (req, res) => {
 // @desc    Delete a resource
 router.delete('/:id', getResource, async (req, res) => {
   try {
-    await res.resource.remove();
+    await res.resource.deleteOne();
     res.json({ message: 'Deleted Resource' });
   } catch (err) {
     res.status(500).json({ error: err.message });
