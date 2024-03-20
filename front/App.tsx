@@ -1,13 +1,20 @@
-import { GluestackUIProvider, Box, View } from "@gluestack-ui/themed";
+import {
+  Button,
+  View,
+  ButtonText, GluestackUIProvider
+} from "@gluestack-ui/themed";
 import { StyleSheet, Text } from "react-native";
+import { config } from "./gluestack-style.config";
 
 export default function App() {
   return (
-    <GluestackUIProvider>
+    <GluestackUIProvider config={config}>
       <View style={styles.container}>
-        <Box width="100%" justifyContent="center" alignItems="center">
-          <Text>Has gluestack provider :)</Text>
-        </Box>
+        <Text>Has gluestack and button :)</Text>
+        <Button onPress={() => alert("Hello")}>
+          <ButtonText>Add </ButtonText>
+        </Button>
+        <Text>Open up App.tsx to start working on your app!</Text>
       </View>
     </GluestackUIProvider>
   );
