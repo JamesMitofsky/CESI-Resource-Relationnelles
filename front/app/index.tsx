@@ -1,22 +1,17 @@
-import {
-  Button,
-  View,
-  ButtonText, GluestackUIProvider
-} from "@gluestack-ui/themed";
-import { StyleSheet, Text } from "react-native";
-import { config } from "../gluestack-style.config";
+import { View, LinkText, Text } from "@gluestack-ui/themed";
+import { StyleSheet } from "react-native";
+import { Link } from 'expo-router';
 
 export default function App() {
   return (
-    <GluestackUIProvider config={config}>
-      <View style={styles.container}>
-        <Text>Has gluestack and button :)</Text>
-        <Button onPress={() => alert("Hello")}>
-          <ButtonText>Again!</ButtonText>
-        </Button>
-        <Text>Open up App.tsx to start working on your app!</Text>
-      </View>
-    </GluestackUIProvider>
+    <View style={styles.container}>
+      <Text>This is the main page, and we're using gluestack-ui :)</Text>
+
+      <Link href="/nested-route/">
+        <LinkText>Go to nested route</LinkText>
+      </Link>
+      <Text>Open up App.tsx to start working on your app!</Text>
+    </View>
   );
 }
 
