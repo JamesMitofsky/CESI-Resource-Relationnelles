@@ -1,34 +1,30 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  View,
+  ButtonText, GluestackUIProvider
+} from "@gluestack-ui/themed";
+import { StyleSheet, Text } from "react-native";
+import { config } from "../gluestack-style.config";
 
-export default function Page() {
+export default function App() {
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Hello World</Text>
-        <Text style={styles.subtitle}>This is the first page of your app.</Text>
+    <GluestackUIProvider config={config}>
+      <View style={styles.container}>
+        <Text>Has gluestack and button :)</Text>
+        <Button onPress={() => alert("Hello")}>
+          <ButtonText>Again!</ButtonText>
+        </Button>
+        <Text>Open up App.tsx to start working on your app!</Text>
       </View>
-    </View>
+    </GluestackUIProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
     justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
   },
 });
