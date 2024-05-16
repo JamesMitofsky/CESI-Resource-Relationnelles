@@ -14,7 +14,7 @@ const StyledIcon: any = styled(
     propertyTokenMap: {
       stroke: "colors",
     },
-  }
+  },
 );
 
 export const GoogleIcon: any = createIcon({
