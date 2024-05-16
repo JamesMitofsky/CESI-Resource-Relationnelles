@@ -1,58 +1,51 @@
 import React from 'react';
 import {
   Box,
-  StatusBar,
   ScrollView,
   VStack,
   KeyboardAvoidingView,
-  GluestackUIProvider,
+  SafeAreaView,
 } from '@gluestack-ui/themed';
 import { Slot } from 'expo-router';
-import { config } from '../../gluestack-style.config';
 
 export default function GuestLayout() {
   return (
-    <GluestackUIProvider config={config}>
-      <KeyboardAvoidingView style={{ flex: 1 }}>
-        <Box
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <Box
+        sx={{
+          _web: {
+            height: '100vh',
+            overflow: 'hidden',
+          },
+        }}
+        height="$full"
+      >
+        <ScrollView
+          flex={1}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           sx={{
-            _web: {
-              height: '100vh',
-              overflow: 'hidden',
+            '@base': {
+              _light: {
+                bg: '$primary500',
+              },
+            },
+            '@md': {
+              _light: {
+                bg: '$primary900',
+              },
+              p: '$8',
+            },
+            _dark: {
+              bg: '$backgroundDark900',
             },
           }}
-          height="$full"
+          bounces={false}
         >
-          <StatusBar
-            translucent
-            backgroundColor="$none"
-            barStyle="light-content"
-          />
-          <ScrollView
-            flex={1}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            sx={{
-              '@base': {
-                _light: {
-                  bg: '$primary500',
-                },
-              },
-              '@md': {
-                _light: {
-                  bg: '$primary900',
-                },
-                p: '$8',
-              },
-              _dark: {
-                bg: '$backgroundDark900',
-              },
-            }}
-            bounces={false}
-          >
+          <SafeAreaView flex={1}>
             <VStack
               w="$full"
               flex={1}
@@ -66,15 +59,11 @@ export default function GuestLayout() {
                 },
               }}
             >
-              <Slot
-                screenOptions={{
-                  headerShown: false,
-                }}
-              />
+              <Slot />
             </VStack>
-          </ScrollView>
-        </Box>
-      </KeyboardAvoidingView>
-    </GluestackUIProvider>
+          </SafeAreaView>
+        </ScrollView>
+      </Box>
+    </KeyboardAvoidingView>
   );
 }
