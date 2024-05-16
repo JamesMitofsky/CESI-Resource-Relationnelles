@@ -1,6 +1,6 @@
 import { View, LinkText, Text } from "@gluestack-ui/themed";
 import { StyleSheet } from "react-native";
-import { Link } from 'expo-router';
+import { Link } from "expo-router";
 
 export default function App() {
   return (
