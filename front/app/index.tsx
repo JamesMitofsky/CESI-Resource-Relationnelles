@@ -7,7 +7,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>This is the main page, and we're using gluestack-ui :)</Text>
 
-      <Link href="/nested-route/">
+      <Link href="/connexion/">
         <LinkText>Go to nested route</LinkText>
       </Link>
       <Text>Open up App.tsx to start working on your app!</Text>
