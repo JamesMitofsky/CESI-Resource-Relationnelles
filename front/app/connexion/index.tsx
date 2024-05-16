@@ -164,7 +164,7 @@ const SignInForm = () => {
               <Input>
                 <InputField
                   fontSize="$sm"
-                  placeholder="Password"
+                  placeholder="Mot de passe"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}

@@ -253,7 +253,7 @@ const SignUpForm = () => {
               <Input>
                 <InputField
                   fontSize="$sm"
-                  placeholder="Password"
+                  placeholder="Mot de passe"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -300,7 +300,7 @@ const SignUpForm = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input>
                 <InputField
-                  placeholder="Confirm Password"
+                  placeholder="Confirmer le mot de passe"
                   fontSize="$sm"
                   value={value}
                   onChangeText={onChange}
