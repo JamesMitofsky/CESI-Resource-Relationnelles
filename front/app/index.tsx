@@ -1,11 +1,13 @@
-import { View, LinkText, Text } from "@gluestack-ui/themed";
-import { StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { View, LinkText, Text } from '@gluestack-ui/themed';
+import { StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>This is the main page, and we're using gluestack-ui :)</Text>
+      <Text>
+        This is the main page, and we're using gluestack-ui :)
+      </Text>
 
       <Link href="/connexion/">
         <LinkText>Go to nested route</LinkText>
@@ -21,8 +23,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

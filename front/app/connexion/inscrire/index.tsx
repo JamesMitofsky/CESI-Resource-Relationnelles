@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 // import axios from 'axios';
-import { Resource } from "../../../types/resource";
-import { Text } from "@gluestack-ui/themed";
+import { Resource } from '../../../types/resource';
+import { Text } from '@gluestack-ui/themed';
 
 // scratchpad for signup page page and type
 
@@ -28,51 +28,51 @@ export default function App() {
         // Replace axios request with dummy data
         const dummyData: Resource[] = [
           {
-            _id: "1",
-            title: "Resource 1",
-            type: "Type 1",
-            categories: [{ categoryType: "Image" }],
-            uploader: "User1",
+            _id: '1',
+            title: 'Resource 1',
+            type: 'Type 1',
+            categories: [{ categoryType: 'Image' }],
+            uploader: 'User1',
             comments: [
               {
-                _id: "Comment1",
+                _id: 'Comment1',
                 creationDate: new Date(),
-                content: "This is a comment",
-                commenter: "User2",
+                content: 'This is a comment',
+                commenter: 'User2',
               },
             ],
             isArchived: false,
             isFavorite: false,
           },
           {
-            _id: "1",
-            title: "Resource 1",
-            type: "Type 1",
-            categories: [{ categoryType: "Image" }],
-            uploader: "User1",
+            _id: '1',
+            title: 'Resource 1',
+            type: 'Type 1',
+            categories: [{ categoryType: 'Image' }],
+            uploader: 'User1',
             comments: [
               {
-                _id: "Comment1",
+                _id: 'Comment1',
                 creationDate: new Date(),
-                content: "This is a comment",
-                commenter: "User2",
+                content: 'This is a comment',
+                commenter: 'User2',
               },
             ],
             isArchived: false,
             isFavorite: false,
           },
           {
-            _id: "1",
-            title: "Resource 1",
-            type: "Type 1",
-            categories: [{ categoryType: "Image" }],
-            uploader: "User1",
+            _id: '1',
+            title: 'Resource 1',
+            type: 'Type 1',
+            categories: [{ categoryType: 'Image' }],
+            uploader: 'User1',
             comments: [
               {
-                _id: "Comment1",
+                _id: 'Comment1',
                 creationDate: new Date(),
-                content: "This is a comment",
-                commenter: "User2",
+                content: 'This is a comment',
+                commenter: 'User2',
               },
             ],
             isArchived: false,
@@ -81,7 +81,7 @@ export default function App() {
         ];
         setResources(dummyData);
       } catch (error) {
-        console.error("Error fetching resources:", error);
+        console.error('Error fetching resources:', error);
       }
     };
 
@@ -112,15 +112,18 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
+    backgroundColor: '#fff',
+    shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowRadius: 8,
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   type: {
     fontSize: 16,
@@ -129,16 +132,16 @@ const styles = StyleSheet.create({
   categories: {
     fontSize: 14,
     marginTop: 8,
-    color: "#666",
+    color: '#666',
   },
   uploader: {
     fontSize: 14,
     marginTop: 8,
-    color: "#666",
+    color: '#666',
   },
   status: {
     fontSize: 14,
     marginTop: 8,
-    color: "#666",
+    color: '#666',
   },
 });

@@ -1,5 +1,5 @@
 export interface Category {
-  categoryType: "Image" | "Video" | "Audio" | "Document" | "Other";
+  categoryType: 'Image' | 'Video' | 'Audio' | 'Document' | 'Other';
 }
 
 export interface Comment {

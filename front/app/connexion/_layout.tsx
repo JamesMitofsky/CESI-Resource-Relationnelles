@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   StatusBar,
@@ -6,9 +6,9 @@ import {
   VStack,
   KeyboardAvoidingView,
   GluestackUIProvider,
-} from "@gluestack-ui/themed";
-import { Slot } from "expo-router";
-import { config } from "../../gluestack-style.config";
+} from '@gluestack-ui/themed';
+import { Slot } from 'expo-router';
+import { config } from '../../gluestack-style.config';
 
 export default function GuestLayout() {
   return (
@@ -17,8 +17,8 @@ export default function GuestLayout() {
         <Box
           sx={{
             _web: {
-              height: "100vh",
-              overflow: "hidden",
+              height: '100vh',
+              overflow: 'hidden',
             },
           }}
           height="$full"
@@ -32,13 +32,24 @@ export default function GuestLayout() {
             flex={1}
             contentContainerStyle={{
               flexGrow: 1,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             sx={{
-              "@base": { _light: { bg: "$primary500" } },
-              "@md": { _light: { bg: "$primary900" }, p: "$8" },
-              _dark: { bg: "$backgroundDark900" },
+              '@base': {
+                _light: {
+                  bg: '$primary500',
+                },
+              },
+              '@md': {
+                _light: {
+                  bg: '$primary900',
+                },
+                p: '$8',
+              },
+              _dark: {
+                bg: '$backgroundDark900',
+              },
             }}
             bounces={false}
           >
@@ -47,15 +58,19 @@ export default function GuestLayout() {
               flex={1}
               overflow="hidden"
               sx={{
-                "@md": {
-                  maxWidth: "$containerWidth",
-                  flexDirection: "row",
-                  rounded: "$xl",
+                '@md': {
+                  maxWidth: '$containerWidth',
+                  flexDirection: 'row',
+                  rounded: '$xl',
                   flex: undefined,
                 },
               }}
             >
-              <Slot screenOptions={{ headerShown: false }} />
+              <Slot
+                screenOptions={{
+                  headerShown: false,
+                }}
+              />
             </VStack>
           </ScrollView>
         </Box>

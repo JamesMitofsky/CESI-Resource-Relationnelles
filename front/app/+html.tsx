@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren } from 'react';
 
 export default function Root({ children }: PropsWithChildren) {
   return (
@@ -15,9 +15,15 @@ export default function Root({ children }: PropsWithChildren) {
         {/* <link rel="canonical" href="https://yourdomain.com" />
         <link rel="image_src" href="https://yourdomain.com/og-image.jpg" /> */}
         <meta name="title" content="Ressources Relationnelles" />
-        <meta name="description" content="Ressources Relationnelles" />
+        <meta
+          name="description"
+          content="Ressources Relationnelles"
+        />
         <meta name="robots" content="index, follow" />
-        <meta name="keywords" content="we need to add some keywords here" />
+        <meta
+          name="keywords"
+          content="we need to add some keywords here"
+        />
         <meta name="author" content="James, Lyza et Darko" />
         <meta name="publisher" content="James, Lyza et Darko" />
         <meta
