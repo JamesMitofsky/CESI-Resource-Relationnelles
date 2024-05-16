@@ -11,13 +11,10 @@ const ResourceSchema = new Schema({
     required: true,
   },
   categories: [{
-    id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Category' // If you have a separate Category collection
-    },
-    label: {
-      type: String,
+    categoryType: {
+      type: String, 
       required: true,
+      enum:["Image" , "Video" , "Audio" , "Document" , "Other"]
     }
   }],
   uploader: {
