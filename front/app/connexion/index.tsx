@@ -31,6 +31,7 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from "@gluestack-ui/themed";
+import { Link as ExpoLink } from "expo-router";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -182,7 +183,7 @@ const SignInForm = () => {
         </FormControl>
       </VStack>
       <Link ml="auto">
-        <LinkText fontSize="$xs">Forgot password?</LinkText>
+        <LinkText fontSize="$xs">Mot de pass oublié ?</LinkText>
       </Link>
       <Controller
         name="rememberme"
@@ -200,7 +201,7 @@ const SignInForm = () => {
             <CheckboxIndicator mr="$2">
               <CheckboxIcon as={CheckIcon} />
             </CheckboxIndicator>
-            <CheckboxLabel>Remember me and keep me logged in</CheckboxLabel>
+            <CheckboxLabel>Souvienir de moi</CheckboxLabel>
           </Checkbox>
         )}
       />
@@ -210,7 +211,7 @@ const SignInForm = () => {
         mt="$5"
         onPress={handleSubmit(onSubmit)}
       >
-        <ButtonText fontSize="$sm"> SIGN IN</ButtonText>
+        <ButtonText fontSize="$sm">CONNEXION</ButtonText>
       </Button>
     </>
   );
@@ -232,12 +233,12 @@ function MobileHeader() {
           sx={{ _dark: { color: "$textDark50" } }}
           fontSize="$lg"
         >
-          Sign In
+          Connexion
         </Text>
       </HStack>
       <VStack space="xs" ml="$1" my="$4">
         <Heading color="$textLight50" sx={{ _dark: { color: "$textDark50" } }}>
-          Welcome back
+          Bonjour !
         </Heading>
         <Text
           fontSize="$md"
@@ -287,7 +288,7 @@ export default function SignIn() {
               "@md": { display: "flex", fontSize: "$2xl" },
             }}
           >
-            Sign in to continue
+            Connectez-vous à votre compte
           </Heading>
           <SignInForm />
           <HStack
@@ -301,11 +302,11 @@ export default function SignIn() {
               fontSize="$sm"
               sx={{ _dark: { color: "$textDark400" } }}
             >
-              Don't have an account?
+              Pas de compte ?
             </Text>
-            <Link href="">
-              <LinkText fontSize="$sm">Sign up</LinkText>
-            </Link>
+            <ExpoLink href="/connexion/inscrire/">
+              <LinkText fontSize="$sm">Inscrivez-vous !</LinkText>
+            </ExpoLink>
           </HStack>
         </Box>
       </>
