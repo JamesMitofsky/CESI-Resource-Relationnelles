@@ -64,7 +64,6 @@ const SignInForm = () => {
   } = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
   });
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
 
   const toast = useToast();
 
@@ -99,10 +98,7 @@ const SignInForm = () => {
   return (
     <>
       <VStack justifyContent="space-between">
-        <FormControl
-          isInvalid={(!!errors.email || isEmailFocused) && !!errors.email}
-          isRequired={true}
-        >
+        <FormControl isInvalid={!!errors.email} isRequired={true}>
           <Controller
             name="email"
             defaultValue=""
