@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Center,
   Button,
   FormControl,
   HStack,
@@ -38,8 +37,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Keyboard } from "react-native";
 import { AlertTriangle } from "lucide-react-native";
-
-import GuestLayout from "../../layouts/GuestLayout";
 
 const signInSchema = z.object({
   email: z.string().min(1, "Email is required").email(),
@@ -223,26 +220,6 @@ const SignInForm = () => {
   );
 };
 
-function SideContainerWeb() {
-  return (
-    <Center
-      flex={1}
-      bg="$primary500"
-      sx={{
-        _dark: { bg: "$primary500" },
-      }}
-    >
-      {/* <Image
-        w="$80"
-        h="$10"
-        alt="gluestack-ui Pro"
-        resizeMode="contain"
-        source={require("./assets/images/gluestackUiProLogo_web_light.svg")}
-      /> */}
-    </Center>
-  );
-}
-
 function MobileHeader() {
   return (
     <VStack px="$3" mt="$4.5" space="md">
@@ -281,73 +258,61 @@ function MobileHeader() {
   );
 }
 
-const Main = () => {
-  return (
-    <>
-      <Box sx={{ "@md": { display: "none" } }}>
-        <MobileHeader />
-      </Box>
-      <Box
-        px="$4"
-        sx={{
-          "@md": {
-            px: "$8",
-            borderTopLeftRadius: "$none",
-            borderTopRightRadius: "$none",
-            borderBottomRightRadius: "$none",
-          },
-          _dark: { bg: "$backgroundDark800" },
-        }}
-        py="$8"
-        flex={1}
-        bg="$backgroundLight0"
-        justifyContent="space-between"
-        borderTopLeftRadius="$2xl"
-        borderTopRightRadius="$2xl"
-        borderBottomRightRadius="$none"
-      >
-        <Heading
-          display="none"
-          mb="$8"
-          sx={{
-            "@md": { display: "flex", fontSize: "$2xl" },
-          }}
-        >
-          Sign in to continue
-        </Heading>
-        <SignInForm />
-        <HStack
-          space="xs"
-          alignItems="center"
-          justifyContent="center"
-          mt="auto"
-        >
-          <Text
-            color="$textLight500"
-            fontSize="$sm"
-            sx={{ _dark: { color: "$textDark400" } }}
-          >
-            Don't have an account?
-          </Text>
-          <Link href="">
-            <LinkText fontSize="$sm">Sign up</LinkText>
-          </Link>
-        </HStack>
-      </Box>
-    </>
-  );
-};
-
 export default function SignIn() {
   return (
-    <GuestLayout>
-      {/* <Box display="none" sx={{ "@md": { display: "flex" } }} flex={1}>
-        <SideContainerWeb />
-      </Box> */}
-
-      <Box flex={1}>
-        <Main />
-      </Box>
-    </GuestLayout>
+    <Box flex={1}>
+      <>
+        <Box sx={{ "@md": { display: "none" } }}>
+          <MobileHeader />
+        </Box>
+        <Box
+          px="$4"
+          sx={{
+            "@md": {
+              px: "$8",
+              borderTopLeftRadius: "$none",
+              borderTopRightRadius: "$none",
+              borderBottomRightRadius: "$none",
+            },
+            _dark: { bg: "$backgroundDark800" },
+          }}
+          py="$8"
+          flex={1}
+          bg="$backgroundLight0"
+          justifyContent="space-between"
+          borderTopLeftRadius="$2xl"
+          borderTopRightRadius="$2xl"
+          borderBottomRightRadius="$none"
+        >
+          <Heading
+            display="none"
+            mb="$8"
+            sx={{
+              "@md": { display: "flex", fontSize: "$2xl" },
+            }}
+          >
+            Sign in to continue
+          </Heading>
+          <SignInForm />
+          <HStack
+            space="xs"
+            alignItems="center"
+            justifyContent="center"
+            mt="auto"
+          >
+            <Text
+              color="$textLight500"
+              fontSize="$sm"
+              sx={{ _dark: { color: "$textDark400" } }}
+            >
+              Don't have an account?
+            </Text>
+            <Link href="">
+              <LinkText fontSize="$sm">Sign up</LinkText>
+            </Link>
+          </HStack>
+        </Box>
+      </>
+    </Box>
   );
 }
