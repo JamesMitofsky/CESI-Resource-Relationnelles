@@ -10,6 +10,9 @@ export default function App() {
       <Link href="/nested-route/">
         <LinkText>Go to nested route</LinkText>
       </Link>
+      <Link href="/home/">
+        <LinkText>Go to home route</LinkText>
+      </Link>
       <Text>Open up App.tsx to start working on your app!</Text>
     </View>
   );
