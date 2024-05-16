@@ -38,6 +38,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Keyboard } from 'react-native';
 import { Link as ExpoLink } from 'expo-router';
+import { FakeUserInterface } from '../../../types/user';
 
 const signUpSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
@@ -126,6 +127,7 @@ function MobileHeader() {
     </VStack>
   );
 }
+
 const SignUpForm = () => {
   const {
     control,
@@ -140,6 +142,28 @@ const SignUpForm = () => {
   const toast = useToast();
   const onSubmit = (_data: SignUpSchemaType) => {
     if (_data.password === _data.confirmpassword) {
+      // contact the server and send over all the info.
+
+      // here's a fake user
+      const fakeUser: FakeUserInterface = {
+        name: 'John Doe',
+        firstName: 'John',
+        password: 'password123',
+        phone: '06 90 23 68 12',
+        email: 'john.doe@example.com',
+        healthCard: 'HC123456789',
+        role: 'user',
+        accountStatus: 'active',
+        sharedResources: [
+          '60d5ecb8b392d78866f8cd3d',
+          '60d5ecb8b392d78866f8cd3e',
+        ],
+        groups: [
+          '60d5ecb8b392d78866f8cd3f',
+          '60d5ecb8b392d78866f8cd40',
+        ],
+      };
+
       setPwMatched(true);
       toast.show({
         placement: 'bottom right',
