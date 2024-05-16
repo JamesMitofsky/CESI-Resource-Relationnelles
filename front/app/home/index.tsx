@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../types/resource';
 import { Platform } from 'react-native';
 
 export default function App() {
+  const PORT = process.env.EXPO_PUBLIC_PORT || 5000;
   const [resources, setResources] = useState<Resource[]>([]);
 
   useEffect(() => {
@@ -13,8 +14,8 @@ export default function App() {
       try {
         const baseURL =
           Platform.OS === 'android'
-            ? 'http://10.0.2.2:5000'
-            : 'http://localhost:5000';
+            ? `http://10.0.2.2:${PORT}`
+            : `http://localhost:${PORT}`;
 
         const response = await axios.get(`${baseURL}/api/resources`);
         setResources(response.data);
