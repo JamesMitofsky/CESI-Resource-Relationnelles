@@ -1,83 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-// import axios from 'axios';
+import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../types/resource';
+import { Platform } from 'react-native';
 
 export default function App() {
   const [resources, setResources] = useState<Resource[]>([]);
 
-  // useEffect(() => {
-  //   const fetchResources = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:3000/api/resources');
-  //       setResources(response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching resources:', error);
-  //     }
-  //   };
-
-  //   fetchResources();
-  // }, []);
-
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        // Replace axios request with dummy data
-        const dummyData: Resource[] = [
-          {
-            _id: '1',
-            title: 'Resource 1',
-            type: 'Type 1',
-            categories: [{ categoryType: 'Image' }],
-            uploader: 'User1',
-            comments: [
-              {
-                _id: 'Comment1',
-                creationDate: new Date(),
-                content: 'This is a comment',
-                commenter: 'User2',
-              },
-            ],
-            isArchived: false,
-            isFavorite: false,
-          },
-          {
-            _id: '1',
-            title: 'Resource 1',
-            type: 'Type 1',
-            categories: [{ categoryType: 'Image' }],
-            uploader: 'User1',
-            comments: [
-              {
-                _id: 'Comment1',
-                creationDate: new Date(),
-                content: 'This is a comment',
-                commenter: 'User2',
-              },
-            ],
-            isArchived: false,
-            isFavorite: false,
-          },
-          {
-            _id: '1',
-            title: 'Resource 1',
-            type: 'Type 1',
-            categories: [{ categoryType: 'Image' }],
-            uploader: 'User1',
-            comments: [
-              {
-                _id: 'Comment1',
-                creationDate: new Date(),
-                content: 'This is a comment',
-                commenter: 'User2',
-              },
-            ],
-            isArchived: false,
-            isFavorite: false,
-          },
-        ];
-        setResources(dummyData);
+        const baseURL =
+          Platform.OS === 'android'
+            ? 'http://10.0.2.2:5000'
+            : 'http://localhost:5000';
+
+        const response = await axios.get(`${baseURL}/api/resources`);
+        setResources(response.data);
+        console.log('Resources:', response.data);
       } catch (error) {
         console.error('Error fetching resources:', error);
       }
@@ -129,10 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
   },
   title: {

@@ -17,6 +17,7 @@
     "@gluestack-ui/config": "^1.1.18",
     "@gluestack-ui/themed": "^1.1.17",
     "@hookform/resolvers": "^3.4.0",
+    "axios": "^1.6.8",
     "expo": "^50.0.14",
     "expo-constants": "~15.4.5",
     "expo-linking": "~6.2.2",
