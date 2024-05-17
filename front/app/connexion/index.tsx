@@ -31,13 +31,14 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from '@gluestack-ui/themed';
-import { Link as ExpoLink } from 'expo-router';
 
+import { Link as ExpoLink } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Keyboard } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import SideContainerWeb from './SideContainerWeb';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
@@ -280,7 +281,7 @@ function MobileHeader() {
   );
 }
 
-export default function SignIn() {
+function LoginFormComponent() {
   return (
     <Box flex={1}>
       <>
@@ -349,5 +350,26 @@ export default function SignIn() {
         </Box>
       </>
     </Box>
+  );
+}
+
+export default function SignIn() {
+  return (
+    <>
+      <Box
+        sx={{
+          '@md': {
+            display: 'flex',
+          },
+        }}
+        flex={1}
+        display="none"
+      >
+        <SideContainerWeb />
+      </Box>
+      <Box flex={1}>
+        <LoginFormComponent />
+      </Box>
+    </>
   );
 }
