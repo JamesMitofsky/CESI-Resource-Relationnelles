@@ -39,6 +39,7 @@ import { AlertTriangle } from 'lucide-react-native';
 import SideContainerWeb from './SideContainerWeb';
 import { useAuth } from '../../components/context/AuthContext';
 import { BASE_URL } from '../../globals/port';
+import axios from 'axios';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
@@ -86,20 +87,13 @@ const SignInForm = () => {
         const id = '65cf6b2dd292430927f02e67';
         try {
           console.log('\n\n\nTry to delete resource\n\n\n');
-          const response = await fetch(
+          const response = await axios.delete(
             `${BASE_URL}/api/resources/${id}`,
-            {
-              method: 'DELETE',
-            },
           );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
 
           console.log(response);
 
-          return await response.json();
+          return response.data;
         } catch (error) {
           console.error('Error deleting resource:', error);
         }
