@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
-// import axios from 'axios';
+import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../../types/resource';
 
@@ -9,77 +9,29 @@ import { Resource } from '../../../types/resource';
 export default function App() {
   const [resources, setResources] = useState<Resource[]>([]);
 
-  // useEffect(() => {
-  //   const fetchResources = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:3000/api/resources');
-  //       setResources(response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching resources:', error);
-  //     }
-  //   };
-
-  //   fetchResources();
-  // }, []);
+  const resource: Resource = {
+    _id: '1',
+    title: 'Resource 1',
+    type: 'Video',
+    categories: [
+      { categoryType: 'Image' },
+      { categoryType: 'Video' },
+    ],
+    uploader: 'Uploader 1',
+    isArchived: false,
+    isFavorite: false,
+    comments: [
+      { _id: '1', content: 'Comment 1', commenter: 'Commenter 1' },
+    ],
+  };
 
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        // Replace axios request with dummy data
-        const dummyData: Resource[] = [
-          {
-            _id: '1',
-            title: 'Resource 1',
-            type: 'Type 1',
-            categories: [{ categoryType: 'Image' }],
-            uploader: 'User1',
-            comments: [
-              {
-                _id: 'Comment1',
-                creationDate: new Date(),
-                content: 'This is a comment',
-                commenter: 'User2',
-              },
-            ],
-            isArchived: false,
-            isFavorite: false,
-          },
-          {
-            _id: '1',
-            title: 'Resource 1',
-            type: 'Type 1',
-            categories: [{ categoryType: 'Image' }],
-            uploader: 'User1',
-            comments: [
-              {
-                _id: 'Comment1',
-                creationDate: new Date(),
-                content: 'This is a comment',
-                commenter: 'User2',
-              },
-            ],
-            isArchived: false,
-            isFavorite: false,
-          },
-          {
-            _id: '1',
-            title: 'Resource 1',
-            type: 'Type 1',
-            categories: [{ categoryType: 'Image' }],
-            uploader: 'User1',
-            comments: [
-              {
-                _id: 'Comment1',
-                creationDate: new Date(),
-                content: 'This is a comment',
-                commenter: 'User2',
-              },
-            ],
-            isArchived: false,
-            isFavorite: false,
-          },
-        ];
-        setResources(dummyData);
+        const response = await axios.get(
+          `http://localhost:3000/api/resources/${resource._id}`,
+        );
+        setResources(response.data);
       } catch (error) {
         console.error('Error fetching resources:', error);
       }
@@ -89,36 +41,33 @@ export default function App() {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {resources.map(resource => (
-        <Card key={resource._id} style={styles.card}>
-          <Text style={styles.title}>{resource.title}</Text>
-          <Text style={styles.type}>{resource.type}</Text>
-          <Text style={styles.categories}>
-            Categories:{' '}
-            {resource.categories.map(c => c.categoryType).join(', ')}
+    <ScrollView style={styles.container}>
+      <Card>
+        <Text>{resource.title}</Text>
+        <Card>
+          <Text>Type: {resource.type}</Text>
+          <Text>Uploader: {resource.uploader}</Text>
+          <Text>
+            Is Archived: {resource.isArchived ? 'Yes' : 'No'}
           </Text>
-          <Text style={styles.uploader}>
-            Uploader: {resource.uploader}
+          <Text>
+            Is Favorite: {resource.isFavorite ? 'Yes' : 'No'}
           </Text>
-          <Text style={styles.status}>
-            Archived: {resource.isArchived ? 'Yes' : 'No'} | Favorite:{' '}
-            {resource.isFavorite ? 'Yes' : 'No'}
-          </Text>
+          <Text>Categories:</Text>
+          {resource.categories.map((category, index) => (
+            <Text key={index}>{category.categoryType}</Text>
+          ))}
+          <Text>Comments:</Text>
+          {resource.comments.map(comment => (
+            <Text key={comment._id}>
+              {comment.content} - {comment.commenter}
+            </Text>
+          ))}
         </Card>
-      ))}
+      </Card>
     </ScrollView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
 
 const styles = StyleSheet.create({
   container: {
