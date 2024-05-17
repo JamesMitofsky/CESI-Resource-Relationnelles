@@ -81,19 +81,19 @@ function MobileHeader() {
   return (
     <VStack px="$3" mt="$4.5" mb="$5" space="md">
       <HStack space="md" alignItems="center">
-        <Link>
+        <ExpoLink href="/connexion/">
           <Icon
             as={ArrowLeftIcon}
             color="$textLight50"
             sx={{ _dark: { color: '$textDark50' } }}
           />
-        </Link>
+        </ExpoLink>
         <Text
           color="$textLight50"
           sx={{ _dark: { color: '$textDark50' } }}
           fontSize="$lg"
         >
-          Sign Up
+          Inscription
         </Text>
       </HStack>
       <VStack space="xs" ml="$1" my="$4">
