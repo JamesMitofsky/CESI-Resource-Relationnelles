@@ -39,6 +39,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Keyboard } from 'react-native';
 import { Link as ExpoLink } from 'expo-router';
 import { FakeUserInterface } from '../../../types/user';
+import axios from 'axios';
+import { BASE_URL } from '../../../globals/port';
 
 const signUpSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
@@ -163,6 +165,28 @@ const SignUpForm = () => {
           '60d5ecb8b392d78866f8cd40',
         ],
       };
+      const createUser = async () => {
+        try {
+          const response = await axios.post(`${BASE_URL}/api/users`, {
+            name: 'Johnnnnnn Doe',
+            firstName: 'John',
+            password: 'password123',
+            phone: '1234567890',
+            email: 'john.doe@example.com',
+            healthCard: 'HC123456',
+            role: 'user',
+            accountStatus: 'active',
+            sharedResources: [],
+            groups: [],
+          });
+
+          console.log(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      createUser();
 
       setPwMatched(true);
       toast.show({
