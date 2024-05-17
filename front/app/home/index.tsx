@@ -4,9 +4,9 @@ import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../types/resource';
 import { Platform } from 'react-native';
+import { PORT } from '../../globals/port';
 
 export default function App() {
-  const PORT = process.env.EXPO_PUBLIC_PORT || 5000;
   const [resources, setResources] = useState<Resource[]>([]);
 
   useEffect(() => {
