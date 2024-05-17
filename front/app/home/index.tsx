@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+} from 'react-native';
 import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../types/resource';
@@ -22,6 +28,11 @@ export default function App() {
     fetchResources();
   }, []);
 
+  const handleButtonClick = (id: string) => {
+    // Handle button click here
+    console.log('Button clicked for resource with ID:', id);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {resources.map(resource => (
@@ -39,20 +50,15 @@ export default function App() {
             Archived: {resource.isArchived ? 'Yes' : 'No'} | Favorite:{' '}
             {resource.isFavorite ? 'Yes' : 'No'}
           </Text>
+          <Button
+            title="Go to Resource"
+            onPress={() => handleButtonClick(resource._id)}
+          />
         </Card>
       ))}
     </ScrollView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
 
 const styles = StyleSheet.create({
   container: {
