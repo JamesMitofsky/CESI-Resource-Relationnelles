@@ -3,8 +3,7 @@ import { ScrollView, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../types/resource';
-import { Platform } from 'react-native';
-import { PORT } from '../../globals/port';
+import { BASE_URL } from '../../globals/port';
 
 export default function App() {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -12,12 +11,7 @@ export default function App() {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const baseURL =
-          Platform.OS === 'android'
-            ? `http://10.0.2.2:${PORT}`
-            : `http://localhost:${PORT}`;
-
-        const response = await axios.get(`${baseURL}/api/resources`);
+        const response = await axios.get(`${BASE_URL}/api/resources`);
         setResources(response.data);
         console.log('Resources:', response.data);
       } catch (error) {
