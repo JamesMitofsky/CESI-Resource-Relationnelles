@@ -14,8 +14,6 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  InputIcon,
-  FormControlHelper,
   Toast,
   ToastTitle,
   useToast,
@@ -27,9 +25,6 @@ import {
   Heading,
   ArrowLeftIcon,
   InputField,
-  InputSlot,
-  EyeIcon,
-  EyeOffIcon,
 } from '@gluestack-ui/themed';
 import { Controller, useForm } from 'react-hook-form';
 import { AlertTriangle } from 'lucide-react-native';
@@ -37,32 +32,46 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Keyboard } from 'react-native';
 import { Link as ExpoLink } from 'expo-router';
-import { FakeUserInterface } from '../../../types/user';
 import SideContainerWeb from '../SideContainerWeb';
 import axios from 'axios';
 import { BASE_URL } from '../../../globals/port';
-
 const signUpSchema = z.object({
-  email: z.string().min(1, 'Email is required').email(),
-  password: z
+  name: z.string().min(1, 'Le nom est requis'),
+  firstName: z.string().min(1, 'Le prénom est requis'),
+  password: z.string(),
+  // .min(6, 'Doit contenir au moins 6 caractères')
+  // .regex(new RegExp('.*[A-Z].*'), 'Un caractère majuscule')
+  // .regex(new RegExp('.*[a-z].*'), 'Un caractère minuscule')
+  // .regex(new RegExp('.*\\d.*'), 'Un numéro')
+  // .regex(
+  //   new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
+  //   'Un caractère spécial',
+  // ),
+  confirmPassword: z.string(),
+  // .min(6, 'Doit contenir au moins 6 caractères')
+  // .regex(new RegExp('.*[A-Z].*'), 'Un caractère majuscule')
+  // .regex(new RegExp('.*[a-z].*'), 'Un caractère minuscule')
+  // .regex(new RegExp('.*\\d.*'), 'Un numéro')
+  // .regex(
+  //   new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
+  //   'Un caractère spécial',
+  // ),
+  phone: z
     .string()
-    .min(6, 'Must be at least 8 characters in length')
-    .regex(new RegExp('.*[A-Z].*'), 'One uppercase character')
-    .regex(new RegExp('.*[a-z].*'), 'One lowercase character')
-    .regex(new RegExp('.*\\d.*'), 'One number')
-    .regex(
-      new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
-      'One special character',
+    .min(
+      10,
+      'Le numéro de téléphone doit contenir au moins 10 chiffres',
     ),
-  confirmpassword: z
+  email: z
     .string()
-    .min(6, 'Must be at least 8 characters in length')
-    .regex(new RegExp('.*[A-Z].*'), 'One uppercase character')
-    .regex(new RegExp('.*[a-z].*'), 'One lowercase character')
-    .regex(new RegExp('.*\\d.*'), 'One number')
-    .regex(
-      new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
-      'One special character',
+    .min(1, "L'email est requis")
+    .email('Email invalide'),
+  healthCard: z
+    .string()
+    .refine(
+      healthCard =>
+        healthCard.length === 13 && !isNaN(Number(healthCard)),
+      'La numéro de votre Carte Vitale doit être un nombre de 13 chiffres',
     ),
   rememberme: z.boolean().optional(),
 });
@@ -119,74 +128,63 @@ const SignUpForm = () => {
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
   });
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
-  const [pwMatched, setPwMatched] = useState(false);
   const toast = useToast();
   const onSubmit = (_data: SignUpSchemaType) => {
-    if (_data.password === _data.confirmpassword) {
-      // contact the server and send over all the info.
-
-      // here's a fake user
-      const fakeUser: FakeUserInterface = {
-        name: 'John Doe',
-        firstName: 'John',
-        password: 'password123',
-        phone: '06 90 23 68 12',
-        email: 'john.doe@example.com',
-        healthCard: 'HC123456789',
-        role: 'user',
-        accountStatus: 'active',
-        sharedResources: [
-          '60d5ecb8b392d78866f8cd3d',
-          '60d5ecb8b392d78866f8cd3e',
-        ],
-        groups: [
-          '60d5ecb8b392d78866f8cd3f',
-          '60d5ecb8b392d78866f8cd40',
-        ],
-      };
+    if (_data.password === _data.confirmPassword) {
       const createUser = async () => {
+        // console.log(_data);
         try {
-          const response = await axios.post(`${BASE_URL}/api/users`, {
-            name: 'Johnnnnnn Doe',
-            firstName: 'John',
-            password: 'password123',
-            phone: '1234567890',
-            email: 'john.doe@example.com',
-            healthCard: 'HC123456',
-            role: 'user',
-            accountStatus: 'active',
-            sharedResources: [],
-            groups: [],
-          });
+          const response = await axios.post(
+            `${BASE_URL}/api/users`,
+            _data,
+          );
 
-          console.log(response.data);
+          console.log(response);
+
+          toast.show({
+            placement: 'bottom right',
+            render: ({ id }) => {
+              return (
+                <Toast
+                  nativeID={id}
+                  variant="accent"
+                  action="success"
+                >
+                  <ToastTitle>
+                    L'inscription a été couronnée de succès !
+                  </ToastTitle>
+                </Toast>
+              );
+            },
+          });
         } catch (error) {
           console.error(error);
+          toast.show({
+            placement: 'bottom right',
+            render: ({ id }) => {
+              return (
+                <Toast nativeID={id} action="error">
+                  <ToastTitle>
+                    Il y avait une erreur. Peut-être cet utilisateur
+                    existe déjà.
+                  </ToastTitle>
+                </Toast>
+              );
+            },
+          });
         }
       };
 
       createUser();
-
-      setPwMatched(true);
-      toast.show({
-        placement: 'bottom right',
-        render: ({ id }) => {
-          return (
-            <Toast nativeID={id} variant="accent" action="success">
-              <ToastTitle>Signed up successfully</ToastTitle>
-            </Toast>
-          );
-        },
-      });
-      reset();
     } else {
       toast.show({
         placement: 'bottom right',
         render: ({ id }) => {
           return (
             <Toast nativeID={id} action="error">
-              <ToastTitle>Passwords do not match</ToastTitle>
+              <ToastTitle>
+                Les mots de passe ne matchent pas.
+              </ToastTitle>
             </Toast>
           );
         },
@@ -213,27 +211,156 @@ const SignUpForm = () => {
   };
   return (
     <>
-      <VStack justifyContent="space-between">
+      <VStack justifyContent="space-between" gap={'$2'}>
+        <FormControl isInvalid={!!errors.name} isRequired={true}>
+          <Controller
+            name="name"
+            defaultValue=""
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Nom"
+                  fontSize="$sm"
+                  type="text"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  returnKeyType="done"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.name?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.firstName} isRequired={true}>
+          <Controller
+            name="firstName"
+            defaultValue=""
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Prénom"
+                  fontSize="$sm"
+                  type="text"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  returnKeyType="done"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.firstName?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.password} isRequired={true}>
+          <Controller
+            name="password"
+            defaultValue=""
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Mot de passe"
+                  fontSize="$sm"
+                  type="password"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  returnKeyType="done"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.password?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+
         <FormControl
-          isInvalid={
-            (!!errors.email || isEmailFocused) && !!errors.email
-          }
+          isInvalid={!!errors.confirmPassword}
           isRequired={true}
         >
+          <Controller
+            name="confirmPassword"
+            defaultValue=""
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Mot de passe"
+                  fontSize="$sm"
+                  type="password"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  returnKeyType="done"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.confirmPassword?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.phone} isRequired={true}>
+          <Controller
+            name="phone"
+            defaultValue=""
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Téléphone"
+                  fontSize="$sm"
+                  type="text"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  returnKeyType="done"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.phone?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.email} isRequired={true}>
           <Controller
             name="email"
             defaultValue=""
             control={control}
-            rules={{
-              validate: async value => {
-                try {
-                  await signUpSchema.parseAsync({ email: value });
-                  return true;
-                } catch (error: any) {
-                  return error.message;
-                }
-              },
-            }}
+            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input>
                 <InputField
@@ -243,7 +370,6 @@ const SignUpForm = () => {
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  onSubmitEditing={handleKeyPress}
                   returnKeyType="done"
                 />
               </Input>
@@ -256,100 +382,34 @@ const SignUpForm = () => {
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
-        <FormControl
-          isInvalid={!!errors.password}
-          isRequired={true}
-          my="$6"
-        >
-          <Controller
-            defaultValue=""
-            name="password"
-            control={control}
-            rules={{
-              validate: async value => {
-                try {
-                  await signUpSchema.parseAsync({
-                    password: value,
-                  });
-                  return true;
-                } catch (error: any) {
-                  return error.message;
-                }
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input>
-                <InputField
-                  fontSize="$sm"
-                  placeholder="Mot de passe"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  onSubmitEditing={handleKeyPress}
-                  returnKeyType="done"
-                  type={showPassword ? 'text' : 'password'}
-                />
-                <InputSlot onPress={handleState} pr="$3">
-                  <InputIcon
-                    as={showPassword ? EyeIcon : EyeOffIcon}
-                  />
-                </InputSlot>
-              </Input>
-            )}
-          />
-          <FormControlError>
-            <FormControlErrorIcon size="sm" as={AlertTriangle} />
-            <FormControlErrorText>
-              {errors?.password?.message}
-            </FormControlErrorText>
-          </FormControlError>
-          <FormControlHelper></FormControlHelper>
-        </FormControl>
-        <FormControl
-          isInvalid={!!errors.confirmpassword}
-          isRequired={true}
-        >
-          <Controller
-            defaultValue=""
-            name="confirmpassword"
-            control={control}
-            rules={{
-              validate: async value => {
-                try {
-                  await signUpSchema.parseAsync({
-                    password: value,
-                  });
-                  return true;
-                } catch (error: any) {
-                  return error.message;
-                }
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input>
-                <InputField
-                  placeholder="Confirmer le mot de passe"
-                  fontSize="$sm"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  onSubmitEditing={handleKeyPress}
-                  returnKeyType="done"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                />
 
-                <InputSlot onPress={handleConfirmPwState} pr="$3">
-                  <InputIcon
-                    as={showConfirmPassword ? EyeIcon : EyeOffIcon}
-                  />
-                </InputSlot>
+        <FormControl
+          isInvalid={!!errors.healthCard}
+          isRequired={true}
+        >
+          <Controller
+            name="healthCard"
+            defaultValue=""
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Numéro de Carte Vitale"
+                  fontSize="$sm"
+                  type="text"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  returnKeyType="done"
+                />
               </Input>
             )}
           />
           <FormControlError>
-            <FormControlErrorIcon size="sm" as={AlertTriangle} />
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
             <FormControlErrorText>
-              {errors?.confirmpassword?.message}
+              {errors?.healthCard?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
@@ -361,7 +421,7 @@ const SignUpForm = () => {
         render={({ field: { onChange, value } }) => (
           <Checkbox
             size="sm"
-            value="Remember me"
+            value="Souvenir de moi"
             isChecked={value}
             onChange={onChange}
             alignSelf="flex-start"

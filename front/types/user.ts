@@ -1,4 +1,4 @@
-export interface FakeUserInterface {
+export interface UserInterface {
   name: string;
   firstName: string;
   password: string;
