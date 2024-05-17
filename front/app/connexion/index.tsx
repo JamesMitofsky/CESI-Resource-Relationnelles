@@ -8,12 +8,10 @@ import {
   VStack,
   Link,
   useToast,
-  Toast,
   Box,
   CheckIcon,
   Checkbox,
   Icon,
-  ToastTitle,
   InputField,
   FormControlError,
   FormControlErrorIcon,
@@ -39,6 +37,7 @@ import { z } from 'zod';
 import { Keyboard } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import SideContainerWeb from './SideContainerWeb';
+import { useAuth } from '../../components/context/AuthContext';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
@@ -69,18 +68,38 @@ const SignInForm = () => {
 
   const toast = useToast();
 
+  const { onLogin } = useAuth();
+
   const onSubmit = (_data: SignInSchemaType) => {
-    toast.show({
-      placement: 'bottom right',
-      render: ({ id }) => {
-        return (
-          <Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Signed in successfully</ToastTitle>
-          </Toast>
-        );
-      },
-    });
-    reset();
+    // do the submission logic here
+
+    // here's a fake user
+    const fakeUser = {
+      email: '1234@gmail.com',
+      password: '1234',
+    };
+
+    console.log('Fake user:', fakeUser);
+    const loginUser = async () => {
+      try {
+        const result = onLogin!(fakeUser.email, fakeUser.password);
+      } catch (error) {
+        console.error(error);
+      }
+      // toast.show({
+      //   placement: 'bottom right',
+      //   render: ({ id }) => {
+      //     return (
+      //       <Toast nativeID={id} variant="accent" action="success">
+      //         <ToastTitle>Signed in successfully</ToastTitle>
+      //       </Toast>
+      //     );
+      //   },
+      // });
+      // reset()
+    };
+
+    loginUser();
     // Implement your own onSubmit and navigation logic here.
   };
 
