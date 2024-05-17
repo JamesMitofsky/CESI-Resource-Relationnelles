@@ -38,19 +38,11 @@ import { Keyboard } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import SideContainerWeb from './SideContainerWeb';
 import { useAuth } from '../../components/context/AuthContext';
+import { BASE_URL } from '../../globals/port';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
-  password: z
-    .string()
-    .min(6, 'Must be at least 8 characters in length')
-    .regex(new RegExp('.*[A-Z].*'), 'One uppercase character')
-    .regex(new RegExp('.*[a-z].*'), 'One lowercase character')
-    .regex(new RegExp('.*\\d.*'), 'One number')
-    .regex(
-      new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
-      'One special character',
-    ),
+  password: z.string(),
   rememberme: z.boolean().optional(),
 });
 
@@ -82,10 +74,39 @@ const SignInForm = () => {
     console.log('Fake user:', fakeUser);
     const loginUser = async () => {
       try {
-        const result = onLogin!(fakeUser.email, fakeUser.password);
+        const result = await onLogin!(
+          fakeUser.email,
+          fakeUser.password,
+        );
       } catch (error) {
         console.error(error);
       }
+
+      const deleteResource = async () => {
+        const id = '65cf6b2dd292430927f02e67';
+        try {
+          console.log('\n\n\nTry to delete resource\n\n\n');
+          const response = await fetch(
+            `${BASE_URL}/api/resources/${id}`,
+            {
+              method: 'DELETE',
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          console.log(response);
+
+          return await response.json();
+        } catch (error) {
+          console.error('Error deleting resource:', error);
+        }
+      };
+
+      deleteResource();
+
       // toast.show({
       //   placement: 'bottom right',
       //   render: ({ id }) => {

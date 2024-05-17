@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const authorizeRole = require('../middleware/authorizeRole');
+const authenticateToken = require('../middleware/authenticateToken');
+
 // Load Resource model
 const Resource = require('../models/Resource');
 
@@ -81,7 +84,7 @@ router.put('/:id', getResource, async (req, res) => {
 
 // @route   DELETE api/resources/:id
 // @desc    Delete a resource
-router.delete('/:id', getResource, async (req, res) => {
+router.delete('/:id', authenticateToken, authorizeRole('moderator'), getResource, async (req, res) => {
   try {
     await res.resource.deleteOne();
     res.json({ message: 'Deleted Resource' });
