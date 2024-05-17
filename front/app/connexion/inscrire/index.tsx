@@ -7,7 +7,6 @@ import {
   Text,
   Link,
   Icon,
-  Center,
   FormControl,
   Box,
   LinkText,
@@ -39,6 +38,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Keyboard } from 'react-native';
 import { Link as ExpoLink } from 'expo-router';
 import { FakeUserInterface } from '../../../types/user';
+import SideContainerWeb from '../SideContainerWeb';
 import axios from 'axios';
 import { BASE_URL } from '../../../globals/port';
 
@@ -67,27 +67,7 @@ const signUpSchema = z.object({
   rememberme: z.boolean().optional(),
 });
 type SignUpSchemaType = z.infer<typeof signUpSchema>;
-function SideContainerWeb() {
-  return (
-    <Center
-      bg="$primary500"
-      flex={1}
-      sx={{
-        _dark: {
-          bg: '$primary500',
-        },
-      }}
-    >
-      {/* <Image
-        h="$10"
-        w="$80"
-        alt="gluestack-ui Pro"
-        resizeMode="contain"
-        source={require('./assets/images/gluestackUiProLogo_web_light.svg')}
-      /> */}
-    </Center>
-  );
-}
+
 function MobileHeader() {
   return (
     <VStack px="$3" mt="$4.5" mb="$5" space="md">
