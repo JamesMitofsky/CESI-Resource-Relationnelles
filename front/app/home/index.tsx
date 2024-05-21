@@ -24,6 +24,21 @@ import {
   Modal,
   Button,
   ModalFooter,
+  CheckboxIcon,
+  CheckboxIndicator,
+  CheckboxLabel,
+  CheckIcon,
+  SelectItem,
+  ChevronDownIcon,
+  Icon,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectPortal,
+  SelectTrigger,
 } from '@gluestack-ui/themed';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
@@ -41,11 +56,6 @@ export default function App() {
   const [uploader, setUploader] = useState('');
   const [isArchived, setIsArchived] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-
-  const handleCreateResource = () => {
-    // Handle resource creation logic here
-    setShowModal(false);
-  };
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -72,49 +82,66 @@ export default function App() {
     //   setCategories([newValue]);
     // }
   };
+
+  const handleCreateResource = async () => {
+    const data = {
+      title: 'TEST Resource !!!',
+      type: 'Image',
+      categories: { categoryType: 'Image' },
+      uploader: { _id: '65cf5f1c21bf58f7b657b658' },
+      comments: [
+        {
+          content: 'salut ca va',
+          commenter: '65cf5f1c21bf58f7b657b658',
+        },
+      ],
+      isArchived: false,
+      isFavorite: false,
+    };
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/resources`,
+        data,
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    setShowModal(false);
+  };
+
   const isWeb = useMediaQuery({ query: '(min-width: 768px)' });
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View
-        style={isWeb ? styles.webContainer : styles.mobileContainer}
-      >
-        {resources.map(resource => (
-          <Card key={resource._id} style={styles.card}>
-            <Text style={styles.title}>{resource.title}</Text>
-            <Text style={styles.type}>{resource.type}</Text>
-            <Text style={styles.categories}>
-              Categories:{' '}
-              {resource.categories
-                .map(c => c.categoryType)
-                .join(', ')}
-            </Text>
-            <Text style={styles.uploader}>
-              Uploader: {resource.uploader}
-            </Text>
-            <Text style={styles.status}>
-              Archived: {resource.isArchived ? 'Yes' : 'No'} |
-              Favorite: {resource.isFavorite ? 'Yes' : 'No'}
-            </Text>
-            <Button onPress={() => handleButtonClick(resource._id)}>
-              <ButtonText>"Go to Resource"</ButtonText>
-            </Button>
-          </Card>
-        ))}
-
-        <Fab
-          size="md"
-          placement="bottom right"
-          isHovered={false}
-          isDisabled={false}
-          isPressed={false}
-          position="absolute"
+    <Center>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View
+          style={isWeb ? styles.webContainer : styles.mobileContainer}
         >
-          <FabIcon as={AddIcon} mr="$1" />
-          <FabLabel>Add a new resource</FabLabel>
-        </Fab>
+          {resources.map(resource => (
+            <Card key={resource._id} style={styles.card}>
+              <Text style={styles.title}>{resource.title}</Text>
+              <Text style={styles.type}>{resource.type}</Text>
+              <Text style={styles.categories}>
+                Categories:{' '}
+                {resource.categories
+                  .map(c => c.categoryType)
+                  .join(', ')}
+              </Text>
+              <Text style={styles.uploader}>
+                Uploader: {resource.uploader}
+              </Text>
+              <Text style={styles.status}>
+                Archived: {resource.isArchived ? 'Yes' : 'No'} |
+                Favorite: {resource.isFavorite ? 'Yes' : 'No'}
+              </Text>
+              <Button onPress={() => handleButtonClick(resource._id)}>
+                <ButtonText>"Go to Resource"</ButtonText>
+              </Button>
+            </Card>
+          ))}
 
-        <Center>
           <Button onPress={() => setShowModal(true)}>
             <ButtonText>Create Resource</ButtonText>
           </Button>
@@ -153,11 +180,28 @@ export default function App() {
                     onValueChange={handleValueChange}
                     placeholder="Select categories"
                   >
-                    <Select.Item label="Image" value="Image" />
-                    <Select.Item label="Video" value="Video" />
-                    <Select.Item label="Audio" value="Audio" />
-                    <Select.Item label="Document" value="Document" />
-                    <Select.Item label="Other" value="Other" />
+                    <SelectTrigger variant="outline" size="md">
+                      <SelectInput placeholder="Select option" />
+                      {/* <SelectIcon mr="$3">
+                        <Icon as={ChevronDownIcon} />
+                      </SelectIcon> */}
+                    </SelectTrigger>
+                    <SelectPortal>
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        <SelectItem label="Image" value="Image" />
+                        <SelectItem label="Video" value="Video" />
+                        <SelectItem label="Audio" value="Audio" />
+                        <SelectItem
+                          label="Document"
+                          value="Document"
+                        />
+                        <SelectItem label="Other" value="Other" />
+                      </SelectContent>
+                    </SelectPortal>
                   </Select>
                   <Input>
                     <InputField
@@ -177,14 +221,20 @@ export default function App() {
                       isChecked={isArchived}
                       onChange={() => setIsArchived(!isArchived)}
                     >
-                      Archived
+                      <CheckboxIndicator mr="$2">
+                        <CheckboxIcon as={CheckIcon} />
+                      </CheckboxIndicator>
+                      <CheckboxLabel>Archived</CheckboxLabel>
                     </Checkbox>
                     <Checkbox
                       value="isFavorite"
                       isChecked={isFavorite}
                       onChange={() => setIsFavorite(!isFavorite)}
                     >
-                      Favorite
+                      <CheckboxIndicator mr="$2">
+                        <CheckboxIcon as={CheckIcon} />
+                      </CheckboxIndicator>
+                      <CheckboxLabel>Favorite</CheckboxLabel>
                     </Checkbox>
                   </CheckboxGroup>
                 </VStack>
@@ -208,9 +258,9 @@ export default function App() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-        </Center>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </Center>
   );
 }
 
