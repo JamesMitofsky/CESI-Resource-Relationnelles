@@ -39,6 +39,7 @@ import {
   SelectInput,
   SelectPortal,
   SelectTrigger,
+  Image,
 } from '@gluestack-ui/themed';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
@@ -114,38 +115,76 @@ export default function App() {
   const isWeb = useMediaQuery({ query: '(min-width: 768px)' });
 
   return (
-    <Center>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View
-          style={isWeb ? styles.webContainer : styles.mobileContainer}
-        >
-          {resources.map(resource => (
-            <Card key={resource._id} style={styles.card}>
-              <Text style={styles.title}>{resource.title}</Text>
-              <Text style={styles.type}>{resource.type}</Text>
-              <Text style={styles.categories}>
-                Categories:{' '}
-                {resource.categories
-                  .map(c => c.categoryType)
-                  .join(', ')}
-              </Text>
-              <Text style={styles.uploader}>
-                Uploader: {resource.uploader}
-              </Text>
-              <Text style={styles.status}>
-                Archived: {resource.isArchived ? 'Yes' : 'No'} |
-                Favorite: {resource.isFavorite ? 'Yes' : 'No'}
-              </Text>
-              <Button onPress={() => handleButtonClick(resource._id)}>
-                <ButtonText>"Go to Resource"</ButtonText>
-              </Button>
-            </Card>
-          ))}
+    <ScrollView contentContainerStyle={styles.container}>
+      <View
+        style={isWeb ? styles.webContainer : styles.mobileContainer}
+      >
+        {resources.map(resource => (
+          <Card key={resource._id} style={styles.card}>
+            <Text style={styles.title}>{resource.title}</Text>
 
-          <Button onPress={() => setShowModal(true)}>
-            <ButtonText>Create Resource</ButtonText>
-          </Button>
+            {resource.categories.map(c => {
+              let imageUrl;
+              switch (c.categoryType) {
+                case 'Document':
+                  imageUrl =
+                    'https://fakeimg.pl/600x400/90c7bc/ffffff?text=Document';
+                  break;
+                case 'Other':
+                  imageUrl = 'https://fakeimg.pl/600x400?text=Other';
+                  break;
+                case 'Image':
+                  imageUrl =
+                    'https://fakeimg.pl/600x400/a492b0/ffffff?text=Image';
+                  break;
+                case 'Video':
+                  imageUrl =
+                    'https://fakeimg.pl/600x400/e08686/ffffff?text=Video';
+                  break;
+                case 'Audio':
+                  imageUrl =
+                    'https://fakeimg.pl/600x400/dbd993/ffffff?text=Audio';
+                  break;
+                default:
+                  imageUrl = 'https://fakeimg.pl/600x400?text=Other';
+              }
+              return (
+                <Image
+                  source={{ uri: imageUrl }}
+                  style={{
+                    width: 600,
+                    height: 250,
+                    borderRadius: 12,
+                    marginTop: 12,
+                  }}
+                />
+              );
+            })}
+            <Text style={styles.categories}>Categories: </Text>
+            <Text style={styles.categories}>{resource.type}</Text>
 
+            <Text style={styles.uploader}>
+              Uploader: {resource.uploader}
+            </Text>
+            <Text style={styles.status}>
+              Archived: {resource.isArchived ? 'Yes' : 'No'} |
+              Favorite: {resource.isFavorite ? 'Yes' : 'No'}
+            </Text>
+            <Button
+              onPress={() => handleButtonClick(resource._id)}
+              style={{
+                marginTop: 12,
+              }}
+            >
+              <ButtonText>"Go to Resource"</ButtonText>
+            </Button>
+          </Card>
+        ))}
+
+        <Button onPress={() => setShowModal(true)}>
+          <ButtonText>Create Resource</ButtonText>
+        </Button>
+        <Center>
           <Modal
             isOpen={showModal}
             onClose={() => setShowModal(false)}
@@ -258,9 +297,9 @@ export default function App() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-        </View>
-      </ScrollView>
-    </Center>
+        </Center>
+      </View>
+    </ScrollView>
   );
 }
 
