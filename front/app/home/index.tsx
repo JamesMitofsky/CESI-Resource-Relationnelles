@@ -160,8 +160,15 @@ export default function App() {
                 />
               );
             })}
-            <Text style={styles.categories}>Categories: </Text>
-            <Text style={styles.categories}>{resource.type}</Text>
+            <Text style={styles.categories}>
+              Categories:{' '}
+              {resource.categories
+                .map(c => c.categoryType)
+                .join(', ')}
+            </Text>
+            <Text style={styles.categories}>
+              Description: {resource.type}
+            </Text>
 
             <Text style={styles.uploader}>
               Uploader: {resource.uploader}
