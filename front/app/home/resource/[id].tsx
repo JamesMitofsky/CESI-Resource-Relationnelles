@@ -209,25 +209,37 @@ export default function App() {
                       </Text>
                     </Box>
                   ))}
-                  <Text>Join the conversation</Text>
-                  <Input
-                    variant="outline"
-                    size="md"
-                    isDisabled={false}
-                    isInvalid={false}
-                    isReadOnly={false}
-                  >
-                    <InputField placeholder="Enter your comment here" />
-                  </Input>
-                  <Button
-                    onPress={() => {
-                      /* handle comment submission */
+                  <Box
+                    style={{
+                      alignItems: 'center',
+                      gap: 15,
                     }}
                   >
-                    <Text style={{ color: 'white' }}>
-                      Submit Comment
+                    <Text
+                      style={{ fontSize: 20, fontWeight: 'bold' }}
+                    >
+                      Join the conversation
                     </Text>
-                  </Button>
+                    <Input
+                      variant="outline"
+                      size="md"
+                      isDisabled={false}
+                      isInvalid={false}
+                      isReadOnly={false}
+                    >
+                      <InputField placeholder="Enter your comment here" />
+                    </Input>
+                    <Button
+                      bgColor="gray"
+                      onPress={() => {
+                        /* handle comment submission */
+                      }}
+                    >
+                      <Text style={{ color: 'white' }}>
+                        Submit Comment
+                      </Text>
+                    </Button>
+                  </Box>
                   <Button onPress={() => setShowModal(true)}>
                     <ButtonText>Modify Resource</ButtonText>
                   </Button>
