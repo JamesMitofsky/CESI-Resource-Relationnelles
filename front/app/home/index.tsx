@@ -90,12 +90,29 @@ export default function App() {
   const handleCreateResource = async () => {
     const data = {
       title: 'TEST Resource !!!',
-      type: 'Image',
-      categories: { categoryType: 'Image' },
+      type: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tincidunt pharetra cursus. Nullam eget odio a dolor tempus commodo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque ultricies, diam finibus pulvinar vehicula, lorem justo porta mi, eget bibendum dui velit eu quam. Nulla ultricies bibendum sapien id pellentesque. Integer non sapien eu libero laoreet venenatis in in velit. Suspendisse non cursus mauris. Aliquam ultrices, mauris sit amet malesuada tempor, erat ex pellentesque massa, a auctor felis lectus non ex. Etiam ut facilisis felis. Proin in sagittis tortor. Sed porttitor diam non dolor fringilla, vel tempus nulla porta. Maecenas convallis blandit nulla, quis consequat orci. Donec tincidunt pellentesque est, id porta nulla semper a. Suspendisse iaculis est sit amet magna venenatis, vitae elementum ante faucibus.
+
+      Proin porttitor tempor lacus sit amet lobortis. Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla. Morbi vel metus a neque pretium placerat. Mauris nec enim imperdiet, malesuada sem sed, sollicitudin nisi. Fusce lobortis et nulla sit amet varius. Integer facilisis neque ultrices, tincidunt ipsum nec, tincidunt justo.'`,
+      categories: { categoryType: 'Video' },
       uploader: { _id: '65cf5f1c21bf58f7b657b658' },
       comments: [
         {
-          content: 'salut ca va',
+          content:
+            'Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla.',
+          commenter: '65cf5f1c21bf58f7b657b658',
+        },
+        {
+          content: 'Proin porttitor tempor lacus sit amet lobortis.',
+          commenter: '65cf5f1c21bf58f7b657b658',
+        },
+        {
+          content:
+            'Proin porttitor tempor lacus sit amet lobortis.Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla.',
+          commenter: '65cf5f1c21bf58f7b657b658',
+        },
+        {
+          content:
+            'Proin porttitor tempor lacus sit amet lobortis. Proin porttitor tempor lacus sit amet lobortis. Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla.',
           commenter: '65cf5f1c21bf58f7b657b658',
         },
       ],

@@ -195,7 +195,17 @@ export default function App() {
                         {comment.content}
                       </Text>
                       <Text style={{ fontSize: 12, color: 'gray' }}>
-                        User : {comment.commenter}
+                        User : {comment.commenter} | Date:{' '}
+                        {comment.creationDate
+                          ? new Date(
+                              comment.creationDate,
+                            ).toLocaleDateString()
+                          : 'N/A'}
+                        {comment.creationDate
+                          ? new Date(
+                              comment.creationDate,
+                            ).toLocaleTimeString()
+                          : 'N/A'}
                       </Text>
                     </Box>
                   ))}
@@ -327,6 +337,27 @@ export default function App() {
                 <Button onPress={handleModifyResource}>
                   <ButtonText>Submit</ButtonText>
                 </Button>
+                <Link href="/home/">
+                  <Button
+                    variant="link"
+                    w="$full"
+                    backgroundColor="red"
+                    onPress={async () => {
+                      try {
+                        await axios.delete(
+                          `${BASE_URL}/api/resources/${id}`,
+                        );
+                        setShowModal(false);
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
+                  >
+                    <ButtonText style={{ color: 'white' }}>
+                      Delete
+                    </ButtonText>
+                  </Button>
+                </Link>
                 <HStack space="xs" alignItems="center">
                   <Button
                     variant="link"
