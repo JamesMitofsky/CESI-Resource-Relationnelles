@@ -116,91 +116,140 @@ export default function App() {
   };
 
   const isWeb = useMediaQuery({ query: '(min-width: 768px)' });
-  let route: { pathname: string; params: { id: string } };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View
-        style={isWeb ? styles.webContainer : styles.mobileContainer}
-      >
-        {resources.map(resource => (
-          <Card key={resource._id} style={styles.card}>
-            <Text style={styles.title}>{resource.title}</Text>
-
-            {resource.categories.map(c => {
-              let imageUrl;
-              switch (c.categoryType) {
-                case 'Document':
-                  imageUrl =
-                    'https://fakeimg.pl/600x400/90c7bc/ffffff?text=Document';
-                  break;
-                case 'Other':
-                  imageUrl = 'https://fakeimg.pl/600x400?text=Other';
-                  break;
-                case 'Image':
-                  imageUrl =
-                    'https://fakeimg.pl/600x400/a492b0/ffffff?text=Image';
-                  break;
-                case 'Video':
-                  imageUrl =
-                    'https://fakeimg.pl/600x400/e08686/ffffff?text=Video';
-                  break;
-                case 'Audio':
-                  imageUrl =
-                    'https://fakeimg.pl/600x400/dbd993/ffffff?text=Audio';
-                  break;
-                default:
-                  imageUrl = 'https://fakeimg.pl/600x400?text=Other';
-              }
-              return (
-                <Image
-                  source={{ uri: imageUrl }}
-                  style={{
-                    width: 600,
-                    height: 250,
-                    borderRadius: 12,
-                    marginTop: 12,
-                  }}
-                />
-              );
-            })}
-            <Text style={styles.categories}>
-              Categories:{' '}
-              {resource.categories
-                .map(c => c.categoryType)
-                .join(', ')}
-            </Text>
-            <Text style={styles.categories}>
-              Description: {resource.type}
-            </Text>
-
-            <Text style={styles.uploader}>
-              Uploader: {resource.uploader}
-            </Text>
-            <Text style={styles.status}>
-              Archived: {resource.isArchived ? 'Yes' : 'No'} |
-              Favorite: {resource.isFavorite ? 'Yes' : 'No'}
-            </Text>
-
-            <Link
-              href={{
-                pathname: `/home/resource/[id]`,
-                params: { id: resource._id },
+      <View>
+        <Box
+          style={{
+            position: 'relative',
+          }}
+        >
+          <Box
+            style={
+              isWeb ? styles.webContainer : styles.mobileContainer
+            }
+          >
+            <Box
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 26,
               }}
             >
-              <Button
+              <Image
+                source={{ uri: '../../assets/images/logo.png' }}
+              />
+              <Text
                 style={{
-                  marginTop: 12,
+                  fontSize: 56,
+                  fontWeight: 'bold',
+                  justifyContent: 'center',
                 }}
               >
-                <ButtonText>"Go to Resource"</ButtonText>
-              </Button>
-            </Link>
-          </Card>
-        ))}
+                Bienvenue sur le site Ressources Relationnelles
+              </Text>
+            </Box>
+            {resources.map(resource => (
+              <Card key={resource._id} style={styles.card}>
+                <Text style={styles.title}>{resource.title}</Text>
 
-        <Button onPress={() => setShowModal(true)}>
-          <ButtonText>Create Resource</ButtonText>
-        </Button>
+                {resource.categories.map(c => {
+                  let imageUrl;
+                  switch (c.categoryType) {
+                    case 'Document':
+                      imageUrl =
+                        'https://fakeimg.pl/600x400/90c7bc/ffffff?text=Document';
+                      break;
+                    case 'Other':
+                      imageUrl =
+                        'https://fakeimg.pl/600x400?text=Other';
+                      break;
+                    case 'Image':
+                      imageUrl =
+                        'https://fakeimg.pl/600x400/a492b0/ffffff?text=Image';
+                      break;
+                    case 'Video':
+                      imageUrl =
+                        'https://fakeimg.pl/600x400/e08686/ffffff?text=Video';
+                      break;
+                    case 'Audio':
+                      imageUrl =
+                        'https://fakeimg.pl/600x400/dbd993/ffffff?text=Audio';
+                      break;
+                    default:
+                      imageUrl =
+                        'https://fakeimg.pl/600x400?text=Other';
+                  }
+                  return (
+                    <Image
+                      source={{ uri: imageUrl }}
+                      style={{
+                        width: 600,
+                        height: 250,
+                        borderRadius: 12,
+                        marginTop: 12,
+                      }}
+                    />
+                  );
+                })}
+                <Text style={styles.categories}>
+                  Categories:{' '}
+                  {resource.categories
+                    .map(c => c.categoryType)
+                    .join(', ')}
+                </Text>
+
+                <Text style={styles.uploader}>
+                  Uploader: {resource.uploader}
+                </Text>
+                <Text style={styles.status}>
+                  Archived: {resource.isArchived ? 'Yes' : 'No'} |
+                  Featured ❤️: {resource.isFavorite ? '🤩' : '😟'}
+                </Text>
+                <Text style={styles.categories}>
+                  Comments: {resource.comments.length}
+                </Text>
+
+                <Link
+                  href={{
+                    pathname: `/home/resource/[id]`,
+                    params: { id: resource._id },
+                  }}
+                >
+                  <Button
+                    style={{
+                      marginTop: 12,
+                    }}
+                  >
+                    <ButtonText>Go to Resource</ButtonText>
+                  </Button>
+                </Link>
+              </Card>
+            ))}
+          </Box>
+          {/* <Fab
+            size="md"
+            placement="bottom right"
+            isHovered={false}
+            isDisabled={false}
+            isPressed={false}
+          >
+            <FabIcon as={AddIcon} mr="$1" />
+            <FabLabel>Quick start</FabLabel>
+          </Fab> */}
+          <Button
+            onPress={() => setShowModal(true)}
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}
+          >
+            <ButtonText>Create Resource</ButtonText>
+          </Button>
+        </Box>
         <Center>
           <Modal
             isOpen={showModal}
