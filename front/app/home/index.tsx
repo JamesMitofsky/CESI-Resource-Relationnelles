@@ -154,17 +154,19 @@ export default function App() {
                 marginBottom: 26,
               }}
             >
-              <Image
-                source={{ uri: '../../assets/images/logo.png' }}
-              />
+              <Link href="/home/">
+                <Image
+                  source={require('../../assets/images/logo.png')}
+                />
+              </Link>
               <Text
                 style={{
                   fontSize: 56,
                   fontWeight: 'bold',
-                  justifyContent: 'center',
+                  textAlign: 'center',
                 }}
               >
-                Bienvenue sur le site Ressources Relationnelles
+                Ressources Relationnelles
               </Text>
             </Box>
             {resources.map(resource => (
@@ -233,35 +235,24 @@ export default function App() {
                     pathname: `/home/resource/[id]`,
                     params: { id: resource._id },
                   }}
+                  style={styles.linkButton}
                 >
-                  <Button
-                    style={{
-                      marginTop: 12,
-                    }}
-                  >
-                    <ButtonText>Go to Resource</ButtonText>
-                  </Button>
+                  <Text>Go to Resource</Text>
                 </Link>
               </Card>
             ))}
           </Box>
-          {/* <Fab
-            size="md"
-            placement="bottom right"
-            isHovered={false}
-            isDisabled={false}
-            isPressed={false}
-          >
-            <FabIcon as={AddIcon} mr="$1" />
-            <FabLabel>Quick start</FabLabel>
-          </Fab> */}
+
           <Button
             onPress={() => setShowModal(true)}
             style={{
               position: 'absolute',
               bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+              display: 'flex',
             }}
           >
             <ButtonText>Create Resource</ButtonText>
@@ -433,5 +424,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     color: '#666',
+  },
+  linkButton: {
+    backgroundColor: '#007BFF',
+    color: '#FFFFFF',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    marginTop: 8,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+    textDecorationLine: 'none',
   },
 });
