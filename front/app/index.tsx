@@ -8,9 +8,11 @@ export default function App() {
       <Text>
         This is the main page, and we're using gluestack-ui :)
       </Text>
-
+      <Link href="/admin/">
+        <LinkText>Go to admin route</LinkText>
+      </Link>
       <Link href="/connexion/">
-        <LinkText>Go to nested route</LinkText>
+        <LinkText>Go to login route</LinkText>
       </Link>
       <Link href="/home/">
         <LinkText>Go to home route</LinkText>
