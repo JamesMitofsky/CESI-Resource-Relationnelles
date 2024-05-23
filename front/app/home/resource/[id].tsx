@@ -80,19 +80,34 @@ export default function App() {
 
   return (
     <ScrollView style={styles.container}>
-      <Link href="/home/">
-        <Button
-          size="md"
-          isHovered={false}
-          isDisabled={false}
-          isPressed={false}
-          style={{ marginBottom: 16 }}
-        >
-          <ButtonText>Return to home page</ButtonText>
-        </Button>
-      </Link>
       <Box>
+        <Box
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 26,
+          }}
+        >
+          <Link href="/home/">
+            <Image
+              source={require('../../../assets/images/logo.png')}
+            />
+          </Link>
+          <Text
+            style={{
+              fontSize: 56,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            Ressources Relationnelles
+          </Text>
+        </Box>
         <Card>
+          <Link href="/home/" style={styles.linkButton}>
+            <Text>Return to home page</Text>
+          </Link>
           {resource ? (
             <>
               <Box
@@ -428,5 +443,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     color: '#666',
+  },
+
+  linkButton: {
+    backgroundColor: '#007BFF',
+    color: '#FFFFFF',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    textAlign: 'center',
+    fontSize: 16,
+    marginTop: 8,
+    fontWeight: '600',
+    textDecorationLine: 'none',
   },
 });
