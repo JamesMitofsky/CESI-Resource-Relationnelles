@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import axios from 'axios';
 import {
   ArrowLeftIcon,
@@ -44,6 +49,7 @@ import {
 import { Resource } from '../../../types/resource';
 import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
+import { resolveHref } from 'expo-router/build/link/href';
 
 export default function App() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -364,11 +370,16 @@ export default function App() {
                 <Button onPress={handleModifyResource}>
                   <ButtonText>Submit</ButtonText>
                 </Button>
+
                 <Link href="/home/">
-                  <Button
-                    variant="link"
-                    w="$full"
-                    backgroundColor="red"
+                  <Pressable
+                    style={{
+                      backgroundColor: 'red',
+                      padding: 10,
+                      borderRadius: 5,
+                      width: '100%',
+                      alignItems: 'center',
+                    }}
                     onPress={async () => {
                       try {
                         await axios.delete(
@@ -380,11 +391,12 @@ export default function App() {
                       }
                     }}
                   >
-                    <ButtonText style={{ color: 'white' }}>
-                      Delete
-                    </ButtonText>
-                  </Button>
+                    <Text style={{ color: 'white' }}>
+                      Supprimer la ressource
+                    </Text>
+                  </Pressable>
                 </Link>
+
                 <HStack space="xs" alignItems="center">
                   <Button
                     variant="link"
@@ -446,11 +458,12 @@ const styles = StyleSheet.create({
   },
 
   linkButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#020092',
+    width: 200,
     color: '#FFFFFF',
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderRadius: 4,
+    borderRadius: 12,
     textAlign: 'center',
     fontSize: 16,
     marginTop: 8,
