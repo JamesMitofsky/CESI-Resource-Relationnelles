@@ -71,7 +71,7 @@ export default function App() {
     fetchUsers();
   }, []);
 
-  // const isWeb = useMediaQuery({ query: '(min-width: 768px)' });
+  const isWeb = useMediaQuery({ query: '(min-width: 768px)' });
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View>
@@ -81,9 +81,9 @@ export default function App() {
           }}
         >
           <Box
-          // style={
-          //   isWeb ? styles.webContainer : styles.mobileContainer
-          // }
+            style={
+              isWeb ? styles.webContainer : styles.mobileContainer
+            }
           >
             <Box
               style={{
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    gap: 16,
   },
   mobileContainer: {
     display: 'flex',
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
+    width: '23%',
   },
   title: {
     fontSize: 18,
@@ -188,14 +189,15 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   linkButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#020092',
+    width: 200,
     color: '#FFFFFF',
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderRadius: 4,
+    borderRadius: 12,
     textAlign: 'center',
-    marginTop: 8,
     fontSize: 16,
+    marginTop: 8,
     fontWeight: '600',
     textDecorationLine: 'none',
   },
