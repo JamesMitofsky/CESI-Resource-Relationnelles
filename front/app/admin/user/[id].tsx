@@ -44,22 +44,23 @@ import {
 import { UserInterface } from '../../../types/user';
 import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
+import { resolveHref } from 'expo-router/build/link/href';
 
 export default function App() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const [user, setUser] = useState<UserInterface | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const [name, setName] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [healthCard, setHealthCard] = useState<string>('');
+  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [healthCard, setHealthCard] = useState('');
   const [role, setRole] = useState<
     'user' | 'moderator' | 'admin' | 'superadmin'
   >('user');
-  const [accountStatus, setAccountStatus] = useState<string>('');
+  const [accountStatus, setAccountStatus] = useState('');
   const [sharedResources, setSharedResources] = useState<string[]>(
     [],
   );
@@ -223,6 +224,9 @@ export default function App() {
                       {group}
                     </Text>
                   ))}
+                  <Button onPress={() => setShowModal(true)}>
+                    <ButtonText>Modify User</ButtonText>
+                  </Button>
                 </Box>
               </Box>
             </>
@@ -231,7 +235,7 @@ export default function App() {
           )}
         </Card>
       </Box>
-      {/* <Center>
+      <Center>
         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
           <ModalBackdrop />
           <ModalContent>
@@ -247,39 +251,39 @@ export default function App() {
                   <InputField
                     placeholder="Enter name"
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    // onChange={e => setName(e.target.value)}
                   />
                 </Input>
                 <Input>
                   <InputField
                     placeholder="Enter first name"
                     value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
+                    // onChange={e => setFirstName(e.target.value)}
                   />
                 </Input>
                 <Input>
                   <InputField
                     placeholder="Enter email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    // onChange={e => setEmail(e.value)}
                   />
                 </Input>
                 <Input>
                   <InputField
                     placeholder="Enter phone"
                     value={phone}
-                    onChange={e => setPhone(e.target.value)}
+                    // onChange={e => setPhone(e.target.value)}
                   />
                 </Input>
                 <Input>
                   <InputField
                     placeholder="Enter health card"
                     value={healthCard}
-                    onChange={e => setHealthCard(e.target.value)}
+                    // onChange={e => setHealthCard(e.target.value)}
                   />
                 </Input>
                 <Select
-                  onValueChange={value => setRole(value)}
+                  //   onValueChange={value => setRole(value)}
                   placeholder="Select role"
                 >
                   <SelectTrigger variant="outline" size="md">
@@ -308,31 +312,51 @@ export default function App() {
                   <InputField
                     placeholder="Enter account status"
                     value={accountStatus}
-                    onChange={e => setAccountStatus(e.target.value)}
+                    // onChange={e => setAccountStatus(e.target.value)}
                   />
                 </Input>
               </VStack>
             </ModalBody>
             <ModalFooter borderTopWidth="$0">
               <VStack space="lg" w="$full">
-                <Button onPress={handleCreateUser}>
-                  <ButtonText>Submit</ButtonText>
+                <Button onPress={handleModifyUser}>
+                  <ButtonText>Envoyer</ButtonText>
                 </Button>
                 <HStack space="xs" alignItems="center">
+                  <Button
+                    variant="link"
+                    w="$full"
+                    backgroundColor="red"
+                    onPress={async () => {
+                      try {
+                        await axios.delete(
+                          `${BASE_URL}/api/resources/${id}`,
+                        );
+                        setShowModal(false);
+                        resolveHref('/admin/');
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
+                  >
+                    <ButtonText style={{ color: 'white' }}>
+                      Supprimer le compte
+                    </ButtonText>
+                  </Button>
                   <Button
                     variant="link"
                     size="sm"
                     onPress={() => setShowModal(false)}
                   >
                     <ButtonIcon as={ArrowLeftIcon} />
-                    <ButtonText>Back to main</ButtonText>
+                    <ButtonText>Retour</ButtonText>
                   </Button>
                 </HStack>
               </VStack>
             </ModalFooter>
           </ModalContent>
-        </Modal> 
-      </Center>*/}
+        </Modal>
+      </Center>
     </ScrollView>
   );
 }
@@ -378,14 +402,15 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   linkButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#020092',
+    width: 200,
     color: '#FFFFFF',
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderRadius: 4,
-    marginTop: 8,
+    borderRadius: 12,
     textAlign: 'center',
     fontSize: 16,
+    marginTop: 8,
     fontWeight: '600',
     textDecorationLine: 'none',
   },
