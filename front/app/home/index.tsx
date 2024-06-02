@@ -54,6 +54,8 @@ import { Resource } from '../../types/resource';
 import { BASE_URL } from '../../globals/port';
 import { useMediaQuery } from 'react-responsive';
 import { Link } from 'expo-router';
+import HeaderComponent from '../components/HeaderComponent';
+import ReturnButtonComponent from '../components/ReturnButtonComponent';
 
 export default function App() {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -149,29 +151,8 @@ export default function App() {
           }}
         >
           <Box>
-            <Box
-              style={{
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: 26,
-              }}
-            >
-              <Link href="/home/">
-                <Image
-                  source={require('../../assets/images/logo.png')}
-                />
-              </Link>
-              <Text
-                style={{
-                  fontSize: 56,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
-              >
-                Ressources Relationnelles
-              </Text>
-            </Box>
+            <HeaderComponent />
+            <ReturnButtonComponent />
             <Box
               style={{
                 justifyContent: 'center',
@@ -181,13 +162,13 @@ export default function App() {
               }}
             >
               <Button onPress={getAllResources} style={styles.button}>
-                <ButtonText>All Resources</ButtonText>
+                <ButtonText>Tous les ressources</ButtonText>
               </Button>
               <Button
                 onPress={getFavouriteResources}
                 style={styles.button}
               >
-                <ButtonText> Favourites</ButtonText>
+                <ButtonText> Nos favoris </ButtonText>
               </Button>
             </Box>
             <Box
@@ -232,6 +213,7 @@ export default function App() {
                       return (
                         <Image
                           source={{ uri: imageUrl }}
+                          alt="Image-Resource-Type"
                           style={{
                             width: 600,
                             height: 250,
