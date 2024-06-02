@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 // Load Resource model
 const Resource = require("../models/Resource");
@@ -61,6 +62,31 @@ router.get("/", async (req, res) => {
 // @desc    Get a resource by id
 router.get("/:id", getResource, (req, res) => {
   res.json(res.resource);
+});
+
+//Create a comment for a resource
+router.post("/:id/comments", async (req, res) => {
+  const { id } = req.params;
+  const { content, commenter } = req.body;
+
+  try {
+    const resource = await Resource.findById(id);
+    if (!resource) {
+      return res.status(404).send({ error: "Resource not found" });
+    }
+
+    const newComment = { content, commenter };
+    resource.comments.push(newComment);
+
+    await resource.save();
+
+    res.status(200).send(resource);
+  } catch (err) {
+    console.error(err); // Log the error to the console
+    res
+      .status(500)
+      .send({ error: "Error adding comment", message: err.message });
+  }
 });
 
 // @route   PUT api/resources/:id
