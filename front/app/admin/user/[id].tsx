@@ -45,6 +45,7 @@ import { UserInterface } from '../../../types/user';
 import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { resolveHref } from 'expo-router/build/link/href';
+import HeaderComponent from '../../components/HeaderComponent';
 
 export default function App() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -90,29 +91,7 @@ export default function App() {
 
   return (
     <ScrollView style={styles.container}>
-      <Box
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 26,
-        }}
-      >
-        <Link href="/home/">
-          <Image
-            source={require('../../../assets/images/logo.png')}
-          />
-        </Link>
-        <Text
-          style={{
-            fontSize: 56,
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
-        >
-          Ressources Relationnelles
-        </Text>
-      </Box>
+      <HeaderComponent />
       <Box>
         <Card>
           <Link href="/admin/" style={styles.linkButton}>
