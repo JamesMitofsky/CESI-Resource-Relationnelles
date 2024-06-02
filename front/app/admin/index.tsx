@@ -54,14 +54,45 @@ import { BASE_URL } from '../../globals/port';
 import { useMediaQuery } from 'react-responsive';
 import { Link } from 'expo-router';
 import { UserInterface } from '../../types/user';
+import { jwtDecode } from 'jwt-decode';
+import HeaderComponent from '../components/HeaderComponent';
+import ReturnButtonComponent from '../components/ReturnButtonComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
+  // const token = localStorage.getItem('token');
   const [users, setUsers] = useState<UserInterface[]>([]);
+  const [decodedToken, setDecodedToken] = useState<any>(null);
 
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        setDecodedToken(decoded);
+      }
+    };
+    getToken();
+  }, []);
+
+  useEffect(() => {
+    if (decodedToken) {
+      console.log(decodedToken.role);
+    }
+  }, [decodedToken]);
+
+  // if (token) {
+  //   decodedToken = jwtDecode(token);
+  //   console.log(decodedToken.role);
+  // }
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/users`);
+        const response = await axios.get(`${BASE_URL}/api/users`, {
+          headers: {
+            Authorization: `Bearer ${decodedToken}`,
+          },
+        });
         setUsers(response.data);
         console.log('Users:', response.data);
       } catch (error) {
@@ -85,54 +116,61 @@ export default function App() {
               isWeb ? styles.webContainer : styles.mobileContainer
             }
           >
+            <HeaderComponent />
             <Box
               style={{
-                width: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginBottom: 26,
+                flex: 1,
+                width: 400,
               }}
             >
-              <Link href="/home/">
-                <Image
-                  source={require('../../assets/images/logo.png')}
-                />
-              </Link>
-              <Text
-                style={{
-                  fontSize: 56,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
-              >
-                Ressources Relationnelles
+              <Text style={{ textAlign: 'center', fontSize: 24 }}>
+                {!decodedToken
+                  ? `Utilisateur non identifié. Veuillez vous connecter.`
+                  : `Bienvenue ${decodedToken.name} | Votre role: ${decodedToken.role}`}
               </Text>
             </Box>
-            {users.map(user => (
-              <Card key={user._id} style={styles.card}>
-                <Text style={styles.title}>
-                  Name:{user.name}
-                  {''}
-                  {user.firstName}
+            <ReturnButtonComponent />
+            {!decodedToken && (
+              <Box
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}
+              >
+                <Text style={{ textAlign: 'center', fontSize: 24 }}>
+                  Accès réservé uniquement aux admins.
                 </Text>
-                <Text style={styles.uploader}>
-                  Email: {user.email}
-                </Text>
-                <Text style={styles.status}>
-                  Role: {user.role} | Account Status:{' '}
-                  {user.accountStatus}
-                </Text>
-                <Link
-                  href={{
-                    pathname: `/admin/user/[id]`,
-                    params: { id: user._id },
-                  }}
-                  style={styles.linkButton}
-                >
-                  <Text>See User Details</Text>
-                </Link>
-              </Card>
-            ))}
+              </Box>
+            )}
+            {decodedToken &&
+              users.map(user => (
+                <Card key={user._id} style={styles.card}>
+                  <Text style={styles.title}>
+                    Name:{user.name}
+                    {''}
+                    {user.firstName}
+                  </Text>
+                  <Text style={styles.uploader}>
+                    Email: {user.email}
+                  </Text>
+                  <Text style={styles.status}>
+                    Role: {user.role} | Account Status:{' '}
+                    {user.accountStatus}
+                  </Text>
+                  <Link
+                    href={{
+                      pathname: `/admin/user/[id]`,
+                      params: { id: user._id },
+                    }}
+                    style={styles.linkButton}
+                  >
+                    <Text>See User Details</Text>
+                  </Link>
+                </Card>
+              ))}
           </Box>
         </Box>
       </View>
