@@ -50,6 +50,8 @@ import { Resource } from '../../../types/resource';
 import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { resolveHref } from 'expo-router/build/link/href';
+import { useMediaQuery } from 'react-responsive';
+import HeaderComponent from '../../components/HeaderComponent';
 
 export default function App() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -84,45 +86,30 @@ export default function App() {
     console.log('Modify value');
   };
 
+  const isDesktopOrLaptop = useMediaQuery({
+    query: '(min-device-width: 1224px)',
+  });
+
+  const Stack = isDesktopOrLaptop ? HStack : VStack;
+
   return (
     <ScrollView style={styles.container}>
       <Box>
-        <Box
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 26,
-          }}
-        >
-          <Link href="/home/">
-            <Image
-              source={require('../../../assets/images/logo.png')}
-            />
-          </Link>
-          <Text
-            style={{
-              fontSize: 56,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}
-          >
-            Ressources Relationnelles
-          </Text>
-        </Box>
+        <HeaderComponent />
         <Card>
           <Link href="/home/" style={styles.linkButton}>
-            <Text>Return to home page</Text>
+            <Text>Retour</Text>
           </Link>
           {resource ? (
             <>
-              <Box
+              {/* <Box
                 style={{
                   display: 'flex',
                   flexDirection: 'row',
                   height: '100%',
                 }}
-              >
+              > */}
+              <Stack>
                 <Box
                   style={{
                     flex: 1,
@@ -160,6 +147,7 @@ export default function App() {
                     return (
                       <Image
                         source={{ uri: imageUrl }}
+                        alt="Image-Resource-Type"
                         style={{
                           width: 600,
                           height: 250,
@@ -194,6 +182,29 @@ export default function App() {
                       {category.categoryType}
                     </Text>
                   ))}
+                  <Button
+                    onPress={() => setShowModal(true)}
+                    bgColor="gray"
+                    style={{ width: 200 }}
+                  >
+                    <ButtonText>Modifier la ressource</ButtonText>
+                  </Button>
+                </Box>
+                <Box
+                  style={{
+                    paddingLeft: 10,
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: 'black',
+                      margin: 20,
+                    }}
+                  >
+                    {resource.type}
+                  </Text>
                   <Text style={{ fontWeight: 'bold' }}>
                     Comments:
                   </Text>
@@ -256,21 +267,12 @@ export default function App() {
                         /* handle comment submission */
                       }}
                     >
-                      <Text style={{ color: 'white' }}>
-                        Submit Comment
-                      </Text>
+                      <Text style={{ color: 'white' }}>Envoyer</Text>
                     </Button>
                   </Box>
-                  <Button onPress={() => setShowModal(true)}>
-                    <ButtonText>Modify Resource</ButtonText>
-                  </Button>
                 </Box>
-                <Box style={{ flex: 1, paddingLeft: 10 }}>
-                  <Text style={{ fontSize: 16, color: 'black' }}>
-                    {resource.type}
-                  </Text>
-                </Box>
-              </Box>
+              </Stack>
+              {/* </Box> */}
             </>
           ) : (
             <Text>Loading...</Text>
