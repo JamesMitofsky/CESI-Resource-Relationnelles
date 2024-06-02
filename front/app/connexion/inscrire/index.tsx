@@ -35,6 +35,8 @@ import { Link as ExpoLink } from 'expo-router';
 import SideContainerWeb from '../SideContainerWeb';
 import axios from 'axios';
 import { BASE_URL } from '../../../globals/port';
+import HeaderComponent from '../../components/HeaderComponent';
+import ReturnButtonComponent from '../../components/ReturnButtonComponent';
 const signUpSchema = z.object({
   name: z.string().min(1, 'Le nom est requis'),
   firstName: z.string().min(1, 'Le prénom est requis'),
@@ -80,6 +82,7 @@ type SignUpSchemaType = z.infer<typeof signUpSchema>;
 function MobileHeader() {
   return (
     <VStack px="$3" mt="$4.5" mb="$5" space="md">
+      <HeaderComponent />
       <HStack space="md" alignItems="center">
         <ExpoLink href="/connexion/">
           <Icon
