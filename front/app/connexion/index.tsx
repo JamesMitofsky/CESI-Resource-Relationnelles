@@ -36,22 +36,26 @@ import { Link as ExpoLink } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Keyboard } from 'react-native';
+import { Keyboard, StyleSheet } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import SideContainerWeb from './SideContainerWeb';
+import axios from 'axios';
+import { BASE_URL } from '../../globals/port';
+import HeaderComponent from '../components/HeaderComponent';
+import ReturnButtonComponent from '../components/ReturnButtonComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email(),
-  password: z
-    .string()
-    .min(6, 'Must be at least 8 characters in length')
-    .regex(new RegExp('.*[A-Z].*'), 'One uppercase character')
-    .regex(new RegExp('.*[a-z].*'), 'One lowercase character')
-    .regex(new RegExp('.*\\d.*'), 'One number')
-    .regex(
-      new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
-      'One special character',
-    ),
+  password: z.string(),
+  // .min(6, 'Must be at least 8 characters in length')
+  // .regex(new RegExp('.*[A-Z].*'), 'One uppercase character')
+  // .regex(new RegExp('.*[a-z].*'), 'One lowercase character')
+  // .regex(new RegExp('.*\\d.*'), 'One number')
+  // .regex(
+  //   new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
+  //   'One special character',
+  //)
   rememberme: z.boolean().optional(),
 });
 
@@ -70,17 +74,33 @@ const SignInForm = () => {
   const toast = useToast();
 
   const onSubmit = (_data: SignInSchemaType) => {
-    toast.show({
-      placement: 'bottom right',
-      render: ({ id }) => {
-        return (
-          <Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Signed in successfully</ToastTitle>
-          </Toast>
+    const loginUser = async () => {
+      // console.log(_data);
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/api/users/login`,
+          _data,
         );
-      },
-    });
-    reset();
+        await AsyncStorage.setItem('token', response.data.token);
+
+        const token = await AsyncStorage.getItem('token');
+        console.log(token);
+        console.log('Vous etes maintenant connectez', response);
+        // toast.show({
+        //   placement: 'bottom right',
+        //   render: ({ id }) => {
+        //     return (
+        //       <Toast nativeID={id} variant="accent" action="success">
+        //         <ToastTitle>Signed in successfully</ToastTitle>
+        //       </Toast>
+        //     );
+        //   },
+        // });
+      } catch (error) {
+        console.error('Error logging in  user:', error);
+      }
+    };
+    loginUser();
     // Implement your own onSubmit and navigation logic here.
   };
 
@@ -229,30 +249,7 @@ const SignInForm = () => {
 function MobileHeader() {
   return (
     <VStack px="$3" mt="$4.5" space="md">
-      <HStack space="md" alignItems="center">
-        <Link>
-          <Icon
-            as={ArrowLeftIcon}
-            color="$textLight50"
-            sx={{
-              _dark: {
-                color: '$textDark50',
-              },
-            }}
-          />
-        </Link>
-        <Text
-          color="$textLight50"
-          sx={{
-            _dark: {
-              color: '$textDark50',
-            },
-          }}
-          fontSize="$lg"
-        >
-          Connexion
-        </Text>
-      </HStack>
+      <HStack space="md" alignItems="center"></HStack>
       <VStack space="xs" ml="$1" my="$4">
         <Heading
           color="$textLight50"
@@ -313,6 +310,8 @@ function LoginFormComponent() {
           borderTopRightRadius="$2xl"
           borderBottomRightRadius="$none"
         >
+          <ReturnButtonComponent />
+          <HeaderComponent />
           <Heading
             display="none"
             mb="$8"
