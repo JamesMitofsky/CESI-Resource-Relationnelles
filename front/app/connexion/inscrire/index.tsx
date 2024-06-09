@@ -26,9 +26,11 @@ import {
   Heading,
   ArrowLeftIcon,
   InputField,
+  InputIcon,
+  InputSlot,
 } from '@gluestack-ui/themed';
 import { Controller, useForm } from 'react-hook-form';
-import { AlertTriangle } from 'lucide-react-native';
+import { AlertTriangle, EyeIcon, EyeOffIcon } from 'lucide-react-native';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Keyboard } from 'react-native';
@@ -125,7 +127,7 @@ function MobileHeader() {
 const SignUpForm = () => {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     reset,
   } = useForm<SignUpSchemaType>({
@@ -203,12 +205,12 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState(false);
-  const handleState = () => {
+  const toggleShowPasswordOfFirstPassword = () => {
     setShowPassword(showState => {
       return !showState;
     });
   };
-  const handleConfirmPwState = () => {
+  const toggleShowPasswordOfSecondPassword = () => {
     setShowConfirmPassword(showState => {
       return !showState;
     });
@@ -274,21 +276,36 @@ const SignUpForm = () => {
 
         <FormControl isInvalid={!!errors.password} isRequired={true}>
           <Controller
-            name="password"
             defaultValue=""
+            name="password"
             control={control}
-            rules={{ required: true }}
+            rules={{
+              validate: async (value) => {
+                try {
+                  await signUpSchema.parseAsync({
+                    password: value,
+                  });
+                  return true;
+                } catch (error: any) {
+                  return error.message;
+                }
+              },
+            }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input>
                 <InputField
-                  placeholder="Mot de passe"
                   fontSize="$sm"
-                  type="password"
+                  placeholder="Password"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
                   returnKeyType="done"
+                  type={showPassword ? 'text' : 'password'}
                 />
+                <InputSlot onPress={toggleShowPasswordOfFirstPassword} pr="$3">
+                  <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
+                </InputSlot>
               </Input>
             )}
           />
@@ -305,21 +322,37 @@ const SignUpForm = () => {
           isRequired={true}
         >
           <Controller
-            name="confirmPassword"
             defaultValue=""
+            name="confirmPassword"
             control={control}
-            rules={{ required: true }}
+            rules={{
+              validate: async (value) => {
+                try {
+                  await signUpSchema.parseAsync({
+                    password: value,
+                  });
+                  return true;
+                } catch (error: any) {
+                  return error.message;
+                }
+              },
+            }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input>
                 <InputField
-                  placeholder="Mot de passe"
+                  placeholder="Confirm Password"
                   fontSize="$sm"
-                  type="password"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
                   returnKeyType="done"
+                  type={showConfirmPassword ? 'text' : 'password'}
                 />
+
+                <InputSlot onPress={toggleShowPasswordOfSecondPassword} pr="$3">
+                  <InputIcon as={showConfirmPassword ? EyeIcon : EyeOffIcon} />
+                </InputSlot>
               </Input>
             )}
           />
@@ -480,6 +513,7 @@ const SignUpForm = () => {
         size="lg"
         mt="$5"
         onPress={handleSubmit(onSubmit)}
+        disabled={false}
       >
         <ButtonText fontSize="$sm">INSCRIRE</ButtonText>
       </Button>
