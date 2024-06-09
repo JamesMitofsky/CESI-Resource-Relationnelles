@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { router } from 'expo-router';
 import {
   Button,
   Checkbox,
@@ -36,7 +37,6 @@ import SideContainerWeb from '../SideContainerWeb';
 import axios from 'axios';
 import { BASE_URL } from '../../../globals/port';
 import HeaderComponent from '../../components/HeaderComponent';
-import ReturnButtonComponent from '../../components/ReturnButtonComponent';
 const signUpSchema = z.object({
   name: z.string().min(1, 'Le nom est requis'),
   firstName: z.string().min(1, 'Le prénom est requis'),
@@ -73,7 +73,7 @@ const signUpSchema = z.object({
     .refine(
       healthCard =>
         healthCard.length === 13 && !isNaN(Number(healthCard)),
-      'La numéro de votre Carte Vitale doit être un nombre de 13 chiffres',
+      'La numéro de votre Carte Vitale constitue de 13 chiffres',
     ),
   rememberme: z.boolean().optional(),
 });
@@ -82,7 +82,6 @@ type SignUpSchemaType = z.infer<typeof signUpSchema>;
 function MobileHeader() {
   return (
     <VStack px="$3" mt="$4.5" mb="$5" space="md">
-      <HeaderComponent />
       <HStack space="md" alignItems="center">
         <ExpoLink href="/connexion/">
           <Icon
@@ -99,12 +98,13 @@ function MobileHeader() {
           Inscription
         </Text>
       </HStack>
+      <HeaderComponent />
       <VStack space="xs" ml="$1" my="$4">
         <Heading
           color="$textLight50"
           sx={{ _dark: { color: '$textDark50' } }}
         >
-          Welcome
+          Bienvenue
         </Heading>
         <Text
           color="$primary300"
@@ -135,7 +135,6 @@ const SignUpForm = () => {
   const onSubmit = (_data: SignUpSchemaType) => {
     if (_data.password === _data.confirmPassword) {
       const createUser = async () => {
-        // console.log(_data);
         try {
           const response = await axios.post(
             `${BASE_URL}/api/users`,
@@ -160,6 +159,8 @@ const SignUpForm = () => {
               );
             },
           });
+
+          router.navigate('/')
         } catch (error) {
           console.error(error);
           toast.show({

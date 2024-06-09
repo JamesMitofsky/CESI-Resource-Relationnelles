@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { router } from 'expo-router';
 import {
   Button,
   FormControl,
@@ -11,9 +12,7 @@ import {
   Toast,
   Box,
   CheckIcon,
-  Checkbox,
-  Icon,
-  ToastTitle,
+  Checkbox, ToastTitle,
   InputField,
   FormControlError,
   FormControlErrorIcon,
@@ -23,20 +22,18 @@ import {
   CheckboxIndicator,
   CheckboxIcon,
   CheckboxLabel,
-  ButtonText,
-  ArrowLeftIcon,
-  Heading,
+  ButtonText, Heading,
   LinkText,
   InputSlot,
   EyeIcon,
-  EyeOffIcon,
+  EyeOffIcon
 } from '@gluestack-ui/themed';
 
 import { Link as ExpoLink } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Keyboard, StyleSheet } from 'react-native';
+import { Keyboard } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import SideContainerWeb from './SideContainerWeb';
 import axios from 'axios';
@@ -75,7 +72,7 @@ const SignInForm = () => {
 
   const onSubmit = (_data: SignInSchemaType) => {
     const loginUser = async () => {
-      // console.log(_data);
+
       try {
         const response = await axios.post(
           `${BASE_URL}/api/users/login`,
@@ -86,16 +83,18 @@ const SignInForm = () => {
         const token = await AsyncStorage.getItem('token');
         console.log(token);
         console.log('Vous etes maintenant connectez', response);
-        // toast.show({
-        //   placement: 'bottom right',
-        //   render: ({ id }) => {
-        //     return (
-        //       <Toast nativeID={id} variant="accent" action="success">
-        //         <ToastTitle>Signed in successfully</ToastTitle>
-        //       </Toast>
-        //     );
-        //   },
-        // });
+        toast.show({
+          placement: 'bottom right',
+          render: ({ id }) => {
+            return (
+              <Toast nativeID={id} variant="accent" action="success">
+                <ToastTitle>Vous êtes connecté !</ToastTitle>
+              </Toast>
+            );
+          },
+        });
+
+        router.navigate('/')
       } catch (error) {
         console.error('Error logging in  user:', error);
       }
