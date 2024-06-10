@@ -131,7 +131,6 @@ export default function App() {
               <ToastTitle>
                 La création d'une ressource a reussi!
               </ToastTitle>
-
               <Link href="/">Retour</Link>
             </Toast>
           );

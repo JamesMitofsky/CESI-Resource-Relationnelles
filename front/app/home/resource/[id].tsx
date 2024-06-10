@@ -154,7 +154,7 @@ export default function App() {
   };
 
   const isDesktopOrLaptop = useMediaQuery({
-    query: '(min-device-width: 1224px)',
+    query: '(min-device-width:720px)',
   });
 
   const Stack = isDesktopOrLaptop ? HStack : VStack;
