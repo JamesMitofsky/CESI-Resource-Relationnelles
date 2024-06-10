@@ -285,7 +285,10 @@ export default function App() {
                 </VStack>
               </ModalHeader>
               <ModalBody>
-                <VStack space="sm">
+                <VStack
+                  space="sm"
+                  style={{ height: 400, overflow: 'scroll' }}
+                >
                   <Text>Le nom de l'utilisateur?</Text>
                   <TextInput
                     style={styles.input}
@@ -307,13 +310,13 @@ export default function App() {
                     value={email}
                     onChangeText={setEmail}
                   />
-                  <Text>Le mot de passe de l'utilisateur?</Text>
+                  {/* <Text>Le mot de passe de l'utilisateur?</Text>
                   <TextInput
                     style={styles.input}
                     placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
-                  />
+                  /> */}
                   <Text>Le téléphone de l'utilisateur?</Text>
                   <TextInput
                     style={styles.input}
@@ -336,8 +339,16 @@ export default function App() {
                       setRole(itemValue)
                     }
                   >
-                    <Picker.Item label="User" value="user" />
+                    <Picker.Item label="Utilisateur" value="user" />
+                    <Picker.Item
+                      label="Moderateur"
+                      value="moderator"
+                    />
                     <Picker.Item label="Admin" value="admin" />
+                    <Picker.Item
+                      label="Super Admin"
+                      value="superadmin"
+                    />
                   </Picker>
                   <Text>Le statut du compte de l'utilisateur?</Text>
                   <Picker
@@ -368,10 +379,13 @@ export default function App() {
                     cliquez ci-dessous 👇
                   </Text>
                   <Link href="/admin/">
-                    <Button
-                      variant="link"
-                      w="$full"
-                      backgroundColor="red"
+                    <Pressable
+                      style={{
+                        borderRadius: 12,
+                        backgroundColor: 'red',
+                        padding: 12,
+                        width: '100%',
+                      }}
                       onPress={async () => {
                         try {
                           await axios.delete(
@@ -384,10 +398,10 @@ export default function App() {
                         }
                       }}
                     >
-                      <ButtonText style={{ color: 'white' }}>
+                      <Text style={{ color: 'white' }}>
                         Supprimer le compte
-                      </ButtonText>
-                    </Button>
+                      </Text>
+                    </Pressable>
                   </Link>
                 </VStack>
               </ModalFooter>
