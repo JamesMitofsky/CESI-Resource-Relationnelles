@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+} from 'react-native';
 import axios from 'axios';
 import {
   ArrowLeftIcon,
@@ -34,6 +40,9 @@ import {
   SelectItem,
   SelectPortal,
   SelectTrigger,
+  Toast,
+  ToastTitle,
+  useToast,
   VStack,
   Box,
   AddIcon,
@@ -46,6 +55,8 @@ import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { resolveHref } from 'expo-router/build/link/href';
 import HeaderComponent from '../../components/HeaderComponent';
+import { Picker } from '@react-native-picker/picker';
+import { useMediaQuery } from 'react-responsive';
 
 export default function App() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -65,7 +76,7 @@ export default function App() {
   const [sharedResources, setSharedResources] = useState<string[]>(
     [],
   );
-  const [groups, setGroups] = useState<string[]>([]);
+  const toast = useToast();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -73,7 +84,16 @@ export default function App() {
         const response = await axios.get(
           `${BASE_URL}/api/users/${id}`,
         );
+        const user = response.data;
         setUser(response.data);
+        setName(user.name);
+        setFirstName(user.firstName);
+        setEmail(user.email);
+        setPassword(user.password);
+        setPhone(user.phone);
+        setHealthCard(user.healthCard);
+        setRole(user.role);
+        setAccountStatus(user.accountStatus);
       } catch (error) {
         console.error(error);
       }
@@ -83,245 +103,171 @@ export default function App() {
   }, [id]);
 
   const handleModifyUser = async () => {
-    console.log('Modify User');
-  };
-  const handleValueChange = (newValue: string) => {
-    console.log('Modify value');
-  };
+    const data = {
+      name,
+      firstName,
+      password,
+      phone,
+      email,
+      healthCard,
+      role,
+      accountStatus,
+    };
 
+    try {
+      console.log('Data:', data); // Debugging
+      console.log(JSON.stringify(data, null, 2));
+      const response = await axios.put(
+        `${BASE_URL}/api/users/${id}`,
+        data,
+      );
+      console.log('User modified::', response.data);
+      toast.show({
+        placement: 'top right',
+        render: ({ id }) => {
+          const toastId = 'toast-' + id;
+          return (
+            <Toast
+              nativeID={toastId}
+              variant="accent"
+              action="success"
+            >
+              <ToastTitle>
+                La modification d'un utilisateur a été realisé !
+              </ToastTitle>
+              <Link href="/admin/">Retour</Link>
+            </Toast>
+          );
+        },
+      });
+    } catch (error) {
+      console.error('Failed to modify user:', error);
+      toast.show({
+        placement: 'top right',
+        render: ({ id }) => {
+          const toastId = 'toast-' + id;
+          return (
+            <Toast nativeID={toastId} action="error">
+              <ToastTitle>
+                Il y avait une erreur. La modification d'un
+                utilisateur a échoué !
+              </ToastTitle>
+              <Link href="/admin/">Retour</Link>
+            </Toast>
+          );
+        },
+      });
+    }
+  };
+  const isDesktopOrLaptop = useMediaQuery({
+    query: '(min-device-width:720px)',
+  });
+
+  const Stack = isDesktopOrLaptop ? HStack : VStack;
   return (
     <ScrollView style={styles.container}>
-      <HeaderComponent />
       <Box>
+        <HeaderComponent />
         <Card>
           <Link href="/admin/" style={styles.linkButton}>
-            <Text>Return to home page</Text>
+            <Text>Retour</Text>
           </Link>
           {user ? (
-            <>
+            <Stack>
               <Box
                 style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  height: '100%',
+                  flex: 1,
+                  paddingRight: 10,
+                  marginBottom: 20, // Replaced 'gap' with 'marginBottom'
                 }}
               >
-                <Box
+                <Text
                   style={{
-                    flex: 1,
-                    paddingRight: 10,
-                    gap: 20,
+                    fontSize: 26,
+                    fontWeight: 'bold',
+                    color: '#333',
+                    marginBottom: 10,
                   }}
                 >
-                  {/* {user.categories.map(c => {
-                    let imageUrl;
-                    switch (c.categoryType) {
-                      case 'Document':
-                        imageUrl =
-                          'https://fakeimg.pl/600x400/90c7bc/ffffff?text=Document';
-                        break;
-                      case 'Other':
-                        imageUrl =
-                          'https://fakeimg.pl/600x400?text=Other';
-                        break;
-                      case 'Image':
-                        imageUrl =
-                          'https://fakeimg.pl/600x400/a492b0/ffffff?text=Image';
-                        break;
-                      case 'Video':
-                        imageUrl =
-                          'https://fakeimg.pl/600x400/e08686/ffffff?text=Video';
-                        break;
-                      case 'Audio':
-                        imageUrl =
-                          'https://fakeimg.pl/600x400/dbd993/ffffff?text=Audio';
-                        break;
-                      default:
-                        imageUrl =
-                          'https://fakeimg.pl/600x400?text=Other';
-                    }
-                    return (
-                      <Image
-                        source={{ uri: imageUrl }}
-                        style={{
-                          width: 600,
-                          height: 250,
-                          borderRadius: 12,
-                          marginTop: 12,
-                        }}
-                      />
-                    );
-                  })} */}
-
-                  <Text style={{ fontSize: 12, color: 'gray' }}>
-                    First Name: {user.firstName}
-                  </Text>
-                  <Text style={{ fontSize: 12, color: 'gray' }}>
-                    Email: {user.email}
-                  </Text>
-                  <Text style={{ fontSize: 12, color: 'gray' }}>
-                    Phone: {user.phone}
-                  </Text>
-                  <Text style={{ fontSize: 12, color: 'gray' }}>
-                    Health Card: {user.healthCard}
-                  </Text>
-                </Box>
-                <Box
-                  style={{
-                    flex: 1,
-                    paddingRight: 10,
-                    gap: 20,
-                  }}
-                >
-                  <Text style={{ fontWeight: 'bold' }}>Role:</Text>
-                  <Text style={{ fontSize: 12, color: 'gray' }}>
-                    {user.role}
-                  </Text>
-                  <Text style={{ fontWeight: 'bold' }}>
-                    Account Status:
-                  </Text>
-                  <Text style={{ fontSize: 12, color: 'gray' }}>
-                    {user.accountStatus}
-                  </Text>
-                  <Text style={{ fontWeight: 'bold' }}>
-                    Shared Resources:
-                  </Text>
-                  {user.sharedResources.map((resource, index) => (
-                    <Text
-                      key={index}
-                      style={{ fontSize: 12, color: 'gray' }}
-                    >
-                      {resource}
-                    </Text>
-                  ))}
-                  <Text style={{ fontWeight: 'bold' }}>Groups:</Text>
-                  {user.groups.map((group, index) => (
-                    <Text
-                      key={index}
-                      style={{ fontSize: 12, color: 'gray' }}
-                    >
-                      {group}
-                    </Text>
-                  ))}
-                  <Button onPress={() => setShowModal(true)}>
-                    <ButtonText>Modify User</ButtonText>
-                  </Button>
-                </Box>
+                  Détails de l'utilisateur
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  📝 Prénom: {user.firstName}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  📧 Email: {user.email}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  📞 Téléphone: {user.phone}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  🏥 Carte vitale: {user.healthCard}
+                </Text>
               </Box>
-            </>
+              <Box
+                style={{
+                  flex: 1,
+                  paddingRight: 10,
+                  marginBottom: 20, // Replaced 'gap' with 'marginBottom'
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 'bold',
+                    color: '#333',
+                    marginBottom: 10,
+                  }}
+                >
+                  Autres informations
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  📚 Rôle: {user.role}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  📈 Statut du compte: {user.accountStatus}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  🔄 Ressources partagées:{' '}
+                  {user.sharedResources.length >= 1
+                    ? user.sharedResources.join(', ')
+                    : 'Aucune ressource partagée'}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  🏷️ Groupes:{' '}
+                  {user.groups.length >= 1
+                    ? user.groups.join(', ')
+                    : 'Aucun groupe'}
+                </Text>
+                <Button
+                  onPress={() => setShowModal(true)}
+                  style={{
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    display: 'flex',
+                  }}
+                >
+                  <Text style={{ color: '#fff' }}>
+                    Modifier l'utilisateur
+                  </Text>
+                </Button>
+              </Box>
+            </Stack>
           ) : (
             <Text>Loading...</Text>
           )}
         </Card>
-      </Box>
-      <Center>
-        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <ModalBackdrop />
-          <ModalContent>
-            <ModalHeader>
-              <VStack>
-                <Heading size="lg">Create User</Heading>
-                <Text>Fill in the details to create a new user</Text>
-              </VStack>
-            </ModalHeader>
-            <ModalBody>
-              <VStack space="xl">
-                <Input>
-                  <InputField
-                    placeholder="Enter name"
-                    value={name}
-                    // onChange={e => setName(e.target.value)}
-                  />
-                </Input>
-                <Input>
-                  <InputField
-                    placeholder="Enter first name"
-                    value={firstName}
-                    // onChange={e => setFirstName(e.target.value)}
-                  />
-                </Input>
-                <Input>
-                  <InputField
-                    placeholder="Enter email"
-                    value={email}
-                    // onChange={e => setEmail(e.value)}
-                  />
-                </Input>
-                <Input>
-                  <InputField
-                    placeholder="Enter phone"
-                    value={phone}
-                    // onChange={e => setPhone(e.target.value)}
-                  />
-                </Input>
-                <Input>
-                  <InputField
-                    placeholder="Enter health card"
-                    value={healthCard}
-                    // onChange={e => setHealthCard(e.target.value)}
-                  />
-                </Input>
-                <Select
-                  //   onValueChange={value => setRole(value)}
-                  placeholder="Select role"
-                >
-                  <SelectTrigger variant="outline" size="md">
-                    <SelectInput placeholder="Select option" />
-                  </SelectTrigger>
-                  <SelectPortal>
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectItem label="User" value="user" />
-                      <SelectItem
-                        label="Moderator"
-                        value="moderator"
-                      />
-                      <SelectItem label="Admin" value="admin" />
-                      <SelectItem
-                        label="Superadmin"
-                        value="superadmin"
-                      />
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-                <Input>
-                  <InputField
-                    placeholder="Enter account status"
-                    value={accountStatus}
-                    // onChange={e => setAccountStatus(e.target.value)}
-                  />
-                </Input>
-              </VStack>
-            </ModalBody>
-            <ModalFooter borderTopWidth="$0">
-              <VStack space="lg" w="$full">
-                <Button onPress={handleModifyUser}>
-                  <ButtonText>Envoyer</ButtonText>
-                </Button>
-                <HStack space="xs" alignItems="center">
-                  <Button
-                    variant="link"
-                    w="$full"
-                    backgroundColor="red"
-                    onPress={async () => {
-                      try {
-                        await axios.delete(
-                          `${BASE_URL}/api/resources/${id}`,
-                        );
-                        setShowModal(false);
-                        resolveHref('/admin/');
-                      } catch (error) {
-                        console.error(error);
-                      }
-                    }}
-                  >
-                    <ButtonText style={{ color: 'white' }}>
-                      Supprimer le compte
-                    </ButtonText>
-                  </Button>
+        <Center>
+          <Modal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+          >
+            <ModalBackdrop />
+            <ModalContent>
+              <ModalHeader>
+                <VStack alignItems="flex-start">
                   <Button
                     variant="link"
                     size="sm"
@@ -330,12 +276,125 @@ export default function App() {
                     <ButtonIcon as={ArrowLeftIcon} />
                     <ButtonText>Retour</ButtonText>
                   </Button>
-                </HStack>
-              </VStack>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Center>
+                  <Heading size="lg">
+                    Modifier cet utilisateur
+                  </Heading>
+                  <Text>
+                    Renseigner tous les informations de l'utilisateur
+                  </Text>
+                </VStack>
+              </ModalHeader>
+              <ModalBody>
+                <VStack space="sm">
+                  <Text>Le nom de l'utilisateur?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Name"
+                    value={name}
+                    onChangeText={setName}
+                  />
+                  <Text>Le prénom de l'utilisateur?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="First Name"
+                    value={firstName}
+                    onChangeText={setFirstName}
+                  />
+                  <Text>L'email de l'utilisateur?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                  <Text>Le mot de passe de l'utilisateur?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                  <Text>Le téléphone de l'utilisateur?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Phone"
+                    value={phone}
+                    onChangeText={setPhone}
+                  />
+                  <Text>La carte de santé de l'utilisateur?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Health Card"
+                    value={healthCard}
+                    onChangeText={setHealthCard}
+                  />
+                  <Text>Le rôle de l'utilisateur?</Text>
+                  <Picker
+                    selectedValue={role}
+                    style={styles.input}
+                    onValueChange={(itemValue: any, itemIndex: any) =>
+                      setRole(itemValue)
+                    }
+                  >
+                    <Picker.Item label="User" value="user" />
+                    <Picker.Item label="Admin" value="admin" />
+                  </Picker>
+                  <Text>Le statut du compte de l'utilisateur?</Text>
+                  <Picker
+                    selectedValue={accountStatus}
+                    style={styles.input}
+                    onValueChange={(itemValue: any, itemIndex: any) =>
+                      setAccountStatus(itemValue)
+                    }
+                  >
+                    <Picker.Item label="Active" value="active" />
+                    <Picker.Item label="Inactive" value="inactive" />
+                  </Picker>
+                </VStack>
+              </ModalBody>
+              <ModalFooter borderTopWidth="$0">
+                <VStack space="lg" w="$full" alignItems="center">
+                  <Link href="/admin/">
+                    <Pressable
+                      onPress={handleModifyUser}
+                      accessibilityLabel="Button to submit and modify a user"
+                      style={styles.button}
+                    >
+                      <Text>Confirmer la modification</Text>
+                    </Pressable>
+                  </Link>
+                  <Text style={{ textAlign: 'center' }}>
+                    Si vous souhaitez supprimer cet utilisateur
+                    cliquez ci-dessous 👇
+                  </Text>
+                  <Link href="/admin/">
+                    <Button
+                      variant="link"
+                      w="$full"
+                      backgroundColor="red"
+                      onPress={async () => {
+                        try {
+                          await axios.delete(
+                            `${BASE_URL}/api/users/${id}`,
+                          );
+                          setShowModal(false);
+                          resolveHref('/admin/');
+                        } catch (error) {
+                          console.error(error);
+                        }
+                      }}
+                    >
+                      <ButtonText style={{ color: 'white' }}>
+                        Supprimer le compte
+                      </ButtonText>
+                    </Button>
+                  </Link>
+                </VStack>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Center>
+      </Box>
     </ScrollView>
   );
 }
@@ -344,19 +403,17 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
-  card: {
-    marginBottom: 16,
-    padding: 16,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 8,
+  webContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
   },
+  mobileContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
   title: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -392,5 +449,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontWeight: '600',
     textDecorationLine: 'none',
+    marginBottom: 18,
+  },
+  button: {
+    borderRadius: 12,
+    padding: 12,
+    backgroundColor: 'grey',
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
   },
 });

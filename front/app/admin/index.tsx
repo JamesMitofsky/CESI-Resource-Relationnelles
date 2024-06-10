@@ -1,46 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  AddIcon,
-  ArrowLeftIcon,
-  Box,
-  Center,
-  Checkbox,
-  Fab,
-  FabIcon,
-  FabLabel,
-  Heading,
-  HStack,
-  Input,
-  Select,
-  VStack,
-  ModalBackdrop,
-  ButtonText,
-  ModalContent,
-  ModalHeader,
-  ButtonIcon,
-  CheckboxGroup,
-  InputField,
-  ModalBody,
-  Modal,
-  Button,
-  ModalFooter,
-  CheckboxIcon,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckIcon,
-  SelectItem,
-  ChevronDownIcon,
-  Icon,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectIcon,
-  SelectInput,
-  SelectPortal,
-  SelectTrigger,
-  Image,
-} from '@gluestack-ui/themed';
+import { AddIcon, ArrowLeftIcon, Box } from '@gluestack-ui/themed';
 import {
   Pressable,
   ScrollView,
@@ -67,6 +26,7 @@ export default function App() {
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem('token');
+      console.log('Token:', token);
       if (token) {
         const decoded = jwtDecode(token);
         setDecodedToken(decoded);
@@ -88,11 +48,7 @@ export default function App() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/users`, {
-          headers: {
-            Authorization: `Bearer ${decodedToken}`,
-          },
-        });
+        const response = await axios.get(`${BASE_URL}/api/users`);
         setUsers(response.data);
         console.log('Users:', response.data);
       } catch (error) {
@@ -149,16 +105,17 @@ export default function App() {
               users.map(user => (
                 <Card key={user._id} style={styles.card}>
                   <Text style={styles.title}>
-                    Name:{user.name}
-                    {''}
+                    Nom complet: {''}
+                    {user.name}
+                    {''} {''}
                     {user.firstName}
                   </Text>
                   <Text style={styles.uploader}>
-                    Email: {user.email}
+                    Adresse mail :{''} {user.email}
                   </Text>
                   <Text style={styles.status}>
-                    Role: {user.role} | Account Status:{' '}
-                    {user.accountStatus}
+                    Role d'utilisateur : {''}
+                    {user.role} | Account Status: {user.accountStatus}
                   </Text>
                   <Link
                     href={{

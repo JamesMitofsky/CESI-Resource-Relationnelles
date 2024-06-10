@@ -39,6 +39,9 @@ import {
   SelectInput,
   SelectPortal,
   SelectTrigger,
+  Toast,
+  ToastTitle,
+  useToast,
   Image,
 } from '@gluestack-ui/themed';
 import {
@@ -46,8 +49,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { Resource } from '../../types/resource';
@@ -62,8 +67,12 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState('');
   const [type, setType] = useState('');
+  const [categoryType, setCategoryType] = useState([]);
+  const [uploaderId, setUploaderId] = useState(
+    '65cf5f1c21bf58f7b657b658',
+  );
   const [categories, setCategories] = useState([]);
-  const [uploader, setUploader] = useState('');
+  const [comments, setComments] = useState([]);
   const [isArchived, setIsArchived] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [filter, setFilter] = useState('all');
@@ -88,69 +97,78 @@ export default function App() {
     getAllResources();
   }, []);
 
-  const handleValueChange = (newValue: string) => {
-    // if (Array.isArray(newValue)) {
-    //   setCategories(newValue:);
-    // } else {
-    //   setCategories([newValue]);
-    // }
-  };
+  const toast = useToast();
 
-  const handleCreateResource = async () => {
+  const handleSubmit = async () => {
     const data = {
-      title: 'TEST Resource !!!',
-      type: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tincidunt pharetra cursus. Nullam eget odio a dolor tempus commodo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque ultricies, diam finibus pulvinar vehicula, lorem justo porta mi, eget bibendum dui velit eu quam. Nulla ultricies bibendum sapien id pellentesque. Integer non sapien eu libero laoreet venenatis in in velit. Suspendisse non cursus mauris. Aliquam ultrices, mauris sit amet malesuada tempor, erat ex pellentesque massa, a auctor felis lectus non ex. Etiam ut facilisis felis. Proin in sagittis tortor. Sed porttitor diam non dolor fringilla, vel tempus nulla porta. Maecenas convallis blandit nulla, quis consequat orci. Donec tincidunt pellentesque est, id porta nulla semper a. Suspendisse iaculis est sit amet magna venenatis, vitae elementum ante faucibus.
-
-      Proin porttitor tempor lacus sit amet lobortis. Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla. Morbi vel metus a neque pretium placerat. Mauris nec enim imperdiet, malesuada sem sed, sollicitudin nisi. Fusce lobortis et nulla sit amet varius. Integer facilisis neque ultrices, tincidunt ipsum nec, tincidunt justo.'`,
-      categories: { categoryType: 'Video' },
-      uploader: { _id: '65cf5f1c21bf58f7b657b658' },
-      comments: [
-        {
-          content:
-            'Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla.',
-          commenter: '65cf5f1c21bf58f7b657b658',
-        },
-        {
-          content: 'Proin porttitor tempor lacus sit amet lobortis.',
-          commenter: '65cf5f1c21bf58f7b657b658',
-        },
-        {
-          content:
-            'Proin porttitor tempor lacus sit amet lobortis.Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla.',
-          commenter: '65cf5f1c21bf58f7b657b658',
-        },
-        {
-          content:
-            'Proin porttitor tempor lacus sit amet lobortis. Proin porttitor tempor lacus sit amet lobortis. Nullam ut lorem ut lectus volutpat maximus. Aenean vel lacinia nulla.',
-          commenter: '65cf5f1c21bf58f7b657b658',
-        },
-      ],
-      isArchived: false,
-      isFavorite: false,
+      title,
+      type,
+      categories: { categoryType },
+      uploader: { _id: uploaderId },
+      comments,
+      isArchived,
+      isFavorite,
     };
 
     try {
+      console.log('Data:', data); // Debugging
+      console.log(JSON.stringify(data, null, 2));
       const response = await axios.post(
         `${BASE_URL}/api/resources`,
         data,
       );
-      console.log(response.data);
+      console.log('Resource created:', response.data);
+      toast.show({
+        placement: 'top right',
+        render: ({ id }) => {
+          const toastId = 'toast-' + id;
+          return (
+            <Toast
+              nativeID={toastId}
+              variant="accent"
+              action="success"
+            >
+              <ToastTitle>
+                La création d'une ressource a reussi!
+              </ToastTitle>
+
+              <Link href="/">Retour</Link>
+            </Toast>
+          );
+        },
+      });
     } catch (error) {
-      console.error(error);
+      console.error('Failed to create resource:', error);
+      toast.show({
+        placement: 'bottom right',
+        render: ({ id }) => {
+          const toastId = 'toast-' + id;
+          return (
+            <Toast nativeID={toastId} action="error">
+              <ToastTitle>
+                La création d'une ressource a échoué.
+              </ToastTitle>
+            </Toast>
+          );
+        },
+      });
     }
-    setShowModal(false);
   };
 
   const isWeb = useMediaQuery({ query: '(min-width: 768px)' });
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      aria-label="Conteneur principal"
+    >
+      <View aria-label="Vue principal">
         <Box
           style={{
             position: 'relative',
           }}
+          aria-label="Boîte principale"
         >
-          <Box>
+          <Box aria-label="En-tête et boutons">
             <HeaderComponent />
             <ReturnButtonComponent />
             <Box
@@ -160,28 +178,42 @@ export default function App() {
                 gap: 16,
                 margin: 42,
               }}
+              aria-label="Boutons de filtre"
             >
-              <Button onPress={getAllResources} style={styles.button}>
-                <ButtonText>Tous les ressources</ButtonText>
+              <Button
+                onPress={getAllResources}
+                style={styles.button}
+                aria-label="Bouton pour obtenir toutes les ressources"
+              >
+                <ButtonText>Toutes les ressources</ButtonText>
               </Button>
               <Button
                 onPress={getFavouriteResources}
                 style={styles.button}
+                aria-label="Bouton pour obtenir les ressources favorites"
               >
-                <ButtonText> Nos favoris </ButtonText>
+                <ButtonText>Nos favoris</ButtonText>
               </Button>
             </Box>
             <Box
               style={
                 isWeb ? styles.webContainer : styles.mobileContainer
               }
+              aria-label="Conteneur de ressources"
             >
-              {resources.map(resource =>
-                filter === 'all' ||
-                filter ===
-                  'favourites' /*&& resource.isFavourite*/ ? (
-                  <Card key={resource._id} style={styles.card}>
-                    <Text style={styles.title}>{resource.title}</Text>
+              {resources.map((resource, index) =>
+                filter === 'all' || filter === 'favourites' ? (
+                  <Card
+                    key={index}
+                    style={styles.card}
+                    aria-label="Carte de ressource"
+                  >
+                    <Text
+                      style={styles.title}
+                      aria-label="Titre de la ressource"
+                    >
+                      {resource.title}
+                    </Text>
 
                     {resource.categories.map(c => {
                       let imageUrl;
@@ -192,7 +224,7 @@ export default function App() {
                           break;
                         case 'Other':
                           imageUrl =
-                            'https://fakeimg.pl/600x400?text=Other';
+                            'https://fakeimg.pl/600x400?text=Autre';
                           break;
                         case 'Image':
                           imageUrl =
@@ -200,7 +232,7 @@ export default function App() {
                           break;
                         case 'Video':
                           imageUrl =
-                            'https://fakeimg.pl/600x400/e08686/ffffff?text=Video';
+                            'https://fakeimg.pl/600x400/e08686/ffffff?text=Vidéo';
                           break;
                         case 'Audio':
                           imageUrl =
@@ -208,37 +240,51 @@ export default function App() {
                           break;
                         default:
                           imageUrl =
-                            'https://fakeimg.pl/600x400?text=Other';
+                            'https://fakeimg.pl/600x400?text=Autre';
                       }
                       return (
                         <Image
                           source={{ uri: imageUrl }}
-                          alt="Image-Resource-Type"
+                          alt="Type de ressource Image"
                           style={{
                             width: 600,
                             height: 250,
                             borderRadius: 12,
                             marginTop: 12,
                           }}
+                          aria-label="Image de type de ressource"
                         />
                       );
                     })}
-                    <Text style={styles.categories}>
-                      Categories:{' '}
+                    <Text
+                      style={styles.categories}
+                      aria-label="Catégories de la ressource"
+                    >
+                      Catégories:{' '}
                       {resource.categories
                         .map(c => c.categoryType)
                         .join(', ')}
                     </Text>
 
-                    <Text style={styles.uploader}>
-                      Uploader: {resource.uploader}
+                    <Text
+                      style={styles.uploader}
+                      aria-label="Téléverseur de la ressource"
+                    >
+                      Téléverseur: {resource.uploader}
                     </Text>
-                    <Text style={styles.status}>
-                      Archived: {resource.isArchived ? 'Yes' : 'No'} |
-                      Featured ❤️: {resource.isFavorite ? '🤩' : '😟'}
+                    <Text
+                      style={styles.status}
+                      aria-label="Statut de la ressource"
+                    >
+                      Archivé: {resource.isArchived ? 'Oui' : 'Non'} |
+                      En vedette ❤️:{' '}
+                      {resource.isFavorite ? '🤩' : '😟'}
                     </Text>
-                    <Text style={styles.categories}>
-                      Comments: {resource.comments.length}
+                    <Text
+                      style={styles.categories}
+                      aria-label="Nombre de commentaires"
+                    >
+                      Commentaires: {resource.comments.length}
                     </Text>
 
                     <Link
@@ -247,8 +293,9 @@ export default function App() {
                         params: { id: resource._id },
                       }}
                       style={styles.linkButton}
+                      aria-label="Lien vers la ressource"
                     >
-                      <Text>Go to Resource</Text>
+                      <Text>Aller à la ressource</Text>
                     </Link>
                   </Card>
                 ) : null,
@@ -267,118 +314,118 @@ export default function App() {
               alignSelf: 'center',
               display: 'flex',
             }}
+            aria-label="Bouton pour créer une ressource"
           >
-            <ButtonText>Create Resource</ButtonText>
+            <ButtonText>Créer une ressource</ButtonText>
           </Button>
         </Box>
         <Center>
           <Modal
             isOpen={showModal}
             onClose={() => setShowModal(false)}
+            aria-label="Modal pour créer une ressource"
           >
             <ModalBackdrop />
             <ModalContent>
               <ModalHeader>
-                <VStack>
-                  <Heading size="lg">Create Resource</Heading>
+                <VStack alignItems="flex-start">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onPress={() => setShowModal(false)}
+                    aria-label="Bouton retour"
+                  >
+                    <ButtonIcon as={ArrowLeftIcon} />
+                    <ButtonText>Retour</ButtonText>
+                  </Button>
+                  <Heading size="lg">Créer une ressource</Heading>
                   <Text>
-                    Fill in the details to create a new resource
+                    Renseigner tous les informations de la ressource
                   </Text>
                 </VStack>
               </ModalHeader>
               <ModalBody>
-                <VStack space="xl">
-                  <Input>
-                    <InputField
-                      placeholder="Enter resource title"
-                      value={title}
-                      onChange={e => console.log(e.target)}
-                    />
-                  </Input>
-                  <Input>
-                    <InputField
-                      placeholder="Enter resource type"
-                      value={type}
-                      onChange={e => console.log(e.target)}
-                    />
-                  </Input>
-                  <Select
-                    onValueChange={handleValueChange}
-                    placeholder="Select categories"
+                <VStack space="sm">
+                  <Text>Le titre de la ressource?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Titre"
+                    value={title}
+                    onChangeText={setTitle}
+                    aria-label="Entrée du titre"
+                  />
+                  <Text>Le contenu de la ressource?</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Contenu de la ressource"
+                    value={type}
+                    onChangeText={setType}
+                    aria-label="Entrée du type"
+                  />
+                  <Text>Catégorie de la ressource?</Text>
+                  <Picker
+                    selectedValue={categoryType}
+                    style={styles.input}
+                    onValueChange={(itemValue: any, itemIndex: any) =>
+                      setCategoryType(itemValue)
+                    }
+                    aria-label="Sélecteur de catégorie"
                   >
-                    <SelectTrigger variant="outline" size="md">
-                      <SelectInput placeholder="Select option" />
-                      {/* <SelectIcon mr="$3">
-                        <Icon as={ChevronDownIcon} />
-                      </SelectIcon> */}
-                    </SelectTrigger>
-                    <SelectPortal>
-                      <SelectBackdrop />
-                      <SelectContent>
-                        <SelectDragIndicatorWrapper>
-                          <SelectDragIndicator />
-                        </SelectDragIndicatorWrapper>
-                        <SelectItem label="Image" value="Image" />
-                        <SelectItem label="Video" value="Video" />
-                        <SelectItem label="Audio" value="Audio" />
-                        <SelectItem
-                          label="Document"
-                          value="Document"
-                        />
-                        <SelectItem label="Other" value="Other" />
-                      </SelectContent>
-                    </SelectPortal>
-                  </Select>
-                  <Input>
-                    <InputField
-                      placeholder="Enter uploader ID"
-                      value={uploader}
-                      onChange={e => console.log(e.target)}
-                    />
-                  </Input>
+                    <Picker.Item label="Vidéo" value="Video" />
+                    <Picker.Item label="Audio" value="Audio" />
+                    <Picker.Item label="Image" value="Image" />
+                    <Picker.Item label="Document" value="Document" />
+                    <Picker.Item label="Autre" value="Other" />
+                  </Picker>
+
                   <CheckboxGroup
+                    mb="$8"
                     value={[
                       isArchived ? 'isArchived' : '',
                       isFavorite ? 'isFavorite' : '',
                     ]}
+                    aria-label="Groupe de cases à cocher"
                   >
+                    <Text>Archiver la ressource?</Text>
                     <Checkbox
                       value="isArchived"
                       isChecked={isArchived}
                       onChange={() => setIsArchived(!isArchived)}
+                      aria-label="Case à cocher pour archiver"
                     >
                       <CheckboxIndicator mr="$2">
                         <CheckboxIcon as={CheckIcon} />
                       </CheckboxIndicator>
-                      <CheckboxLabel>Archived</CheckboxLabel>
+                      <CheckboxLabel>Archivé</CheckboxLabel>
                     </Checkbox>
+                    <Text>Ressource mise en avant?</Text>
                     <Checkbox
                       value="isFavorite"
                       isChecked={isFavorite}
                       onChange={() => setIsFavorite(!isFavorite)}
+                      aria-label="Case à cocher pour mettre en avant"
                     >
                       <CheckboxIndicator mr="$2">
                         <CheckboxIcon as={CheckIcon} />
                       </CheckboxIndicator>
-                      <CheckboxLabel>Favorite</CheckboxLabel>
+                      <CheckboxLabel>Favori</CheckboxLabel>
                     </Checkbox>
                   </CheckboxGroup>
                 </VStack>
               </ModalBody>
               <ModalFooter borderTopWidth="$0">
                 <VStack space="lg" w="$full">
-                  <Button onPress={handleCreateResource}>
-                    <ButtonText>Submit</ButtonText>
-                  </Button>
-                  <HStack space="xs" alignItems="center">
-                    <Button
-                      variant="link"
-                      size="sm"
-                      onPress={() => setShowModal(false)}
-                    >
-                      <ButtonIcon as={ArrowLeftIcon} />
-                      <ButtonText>Back to main</ButtonText>
-                    </Button>
+                  <HStack space="xs" justifyContent="center">
+                    <Link href="/home/">
+                      <Pressable
+                        onPress={handleSubmit}
+                        accessibilityLabel="Bouton pour soumettre une nouvelle ressource"
+                        style={styles.button}
+                        aria-label="Bouton de soumission"
+                      >
+                        <Text>Créer votre ressource</Text>
+                      </Pressable>
+                    </Link>
                   </HStack>
                 </VStack>
               </ModalFooter>
@@ -451,6 +498,12 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 12,
-    backgroundColor: '#020092',
+    padding: 12,
+    backgroundColor: 'grey',
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
   },
 });

@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
 } from 'react-native';
 import axios from 'axios';
 import {
@@ -52,6 +53,7 @@ import { Link, useLocalSearchParams } from 'expo-router';
 import { resolveHref } from 'expo-router/build/link/href';
 import { useMediaQuery } from 'react-responsive';
 import HeaderComponent from '../../components/HeaderComponent';
+import { Picker } from '@react-native-picker/picker';
 
 export default function App() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -59,10 +61,15 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState('');
   const [type, setType] = useState('');
+  const [categoryType, setCategoryType] = useState([]);
+  const [uploaderId, setUploaderId] = useState({
+    uploader: { _id: '' },
+  });
   const [categories, setCategories] = useState([]);
-  const [uploader, setUploader] = useState('');
+  const [comments, setComments] = useState([]);
   const [isArchived, setIsArchived] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -70,7 +77,31 @@ export default function App() {
         const response = await axios.get(
           `${BASE_URL}/api/resources/${id}`,
         );
+        const {
+          title,
+          type,
+          categories,
+          uploader,
+          comments,
+          isArchived,
+          isFavorite,
+        } = response.data;
+
         setResource(response.data);
+        setTitle(title);
+        setType(type);
+        setCategories(categories);
+        setCategoryType(
+          categories.map(
+            (category: { categoryType: string }) =>
+              category.categoryType,
+          ),
+        );
+        setUploaderId(uploader);
+        setComments(comments);
+        setIsArchived(isArchived);
+        setIsFavorite(isFavorite);
+        console.log(JSON.stringify(response.data, null, 2));
       } catch (error) {
         console.error(error);
       }
@@ -80,10 +111,46 @@ export default function App() {
   }, [id]);
 
   const handleModifyResource = async () => {
-    console.log('Modify resource');
+    const data = {
+      title,
+      type,
+      categories: categories.map(category => ({
+        categoryType: categoryType,
+      })),
+      uploader: { _id: uploaderId },
+      comments,
+      isArchived,
+      isFavorite,
+    };
+
+    try {
+      console.log('Data:', data); // Debugging
+      console.log(JSON.stringify(data, null, 2));
+      const response = await axios.put(
+        `${BASE_URL}/api/resources/${id}`,
+        data,
+      );
+      console.log('Resource modified:', response.data);
+    } catch (error) {
+      console.error('Failed to modify resource:', error);
+    }
   };
-  const handleValueChange = (newValue: string) => {
-    console.log('Modify value');
+
+  const handleCommentSubmit = async () => {
+    const commentData = {
+      content: comment,
+      commenter: uploaderId,
+    };
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/resources/${id}/comments`,
+        commentData,
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const isDesktopOrLaptop = useMediaQuery({
@@ -205,8 +272,8 @@ export default function App() {
                   >
                     {resource.type}
                   </Text>
-                  <Text style={{ fontWeight: 'bold' }}>
-                    Comments:
+                  <Text style={{ fontWeight: 'bold', fontSize: 20 }}>
+                    Commentaires:
                   </Text>
                   {resource.comments.map((comment, index) => (
                     <Box
@@ -250,22 +317,17 @@ export default function App() {
                     <Text
                       style={{ fontSize: 20, fontWeight: 'bold' }}
                     >
-                      Join the conversation
+                      Rejoindre la conversation ! 🗨️
                     </Text>
-                    <Input
-                      variant="outline"
-                      size="md"
-                      isDisabled={false}
-                      isInvalid={false}
-                      isReadOnly={false}
-                    >
-                      <InputField placeholder="Enter your comment here" />
-                    </Input>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Rajouter un commentaire"
+                      value={comment}
+                      onChangeText={setComment}
+                    />
                     <Button
                       bgColor="gray"
-                      onPress={() => {
-                        /* handle comment submission */
-                      }}
+                      onPress={handleCommentSubmit}
                     >
                       <Text style={{ color: 'white' }}>Envoyer</Text>
                     </Button>
@@ -284,66 +346,60 @@ export default function App() {
           <ModalBackdrop />
           <ModalContent>
             <ModalHeader>
-              <VStack>
-                <Heading size="lg">Create Resource</Heading>
+              <VStack alignItems="flex-start">
+                <Button
+                  variant="link"
+                  size="sm"
+                  onPress={() => setShowModal(false)}
+                >
+                  <ButtonIcon as={ArrowLeftIcon} />
+                  <ButtonText>Retour</ButtonText>
+                </Button>
+                <Heading size="lg">Modifier cette ressource</Heading>
                 <Text>
-                  Fill in the details to create a new resource
+                  Renseigner tous les informations de la ressource
                 </Text>
               </VStack>
             </ModalHeader>
             <ModalBody>
-              <VStack space="xl">
-                <Input>
-                  <InputField
-                    placeholder="Enter resource title"
-                    value={title}
-                    onChange={e => console.log(e.target)}
-                  />
-                </Input>
-                <Input>
-                  <InputField
-                    placeholder="Enter resource type"
-                    value={type}
-                    onChange={e => console.log(e.target)}
-                  />
-                </Input>
-                <Select
-                  onValueChange={handleValueChange}
-                  placeholder="Select categories"
+              <VStack space="sm">
+                <Text>Le titre de la ressource?</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Title"
+                  value={title}
+                  onChangeText={setTitle}
+                />
+                <Text>Le contenu de la ressource?</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Type"
+                  value={type}
+                  onChangeText={setType}
+                />
+                <Text>Catégorie de la ressource?</Text>
+                <Picker
+                  selectedValue={categoryType}
+                  style={styles.input}
+                  onValueChange={(itemValue: any, itemIndex: any) =>
+                    setCategoryType(itemValue)
+                  }
                 >
-                  <SelectTrigger variant="outline" size="md">
-                    <SelectInput placeholder="Select option" />
-                    {/* <SelectIcon mr="$3">
-                        <Icon as={ChevronDownIcon} />
-                      </SelectIcon> */}
-                  </SelectTrigger>
-                  <SelectPortal>
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectItem label="Image" value="Image" />
-                      <SelectItem label="Video" value="Video" />
-                      <SelectItem label="Audio" value="Audio" />
-                      <SelectItem label="Document" value="Document" />
-                      <SelectItem label="Other" value="Other" />
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-                <Input>
-                  <InputField
-                    placeholder="Enter uploader ID"
-                    value={uploader}
-                    onChange={e => console.log(e.target)}
-                  />
-                </Input>
+                  <Picker.Item label="Video" value="Video" />
+                  <Picker.Item label="Audio" value="Audio" />
+                  <Picker.Item label="Image" value="Image" />
+                  <Picker.Item label="Document" value="Document" />
+                  <Picker.Item label="Other" value="Other" />
+                </Picker>
+
                 <CheckboxGroup
+                  mb="$8"
                   value={[
                     isArchived ? 'isArchived' : '',
                     isFavorite ? 'isFavorite' : '',
                   ]}
                 >
+                  <Text>Archiver la ressource?</Text>
                   <Checkbox
                     value="isArchived"
                     isChecked={isArchived}
@@ -354,6 +410,7 @@ export default function App() {
                     </CheckboxIndicator>
                     <CheckboxLabel>Archived</CheckboxLabel>
                   </Checkbox>
+                  <Text>Ressource mise en avant?</Text>
                   <Checkbox
                     value="isFavorite"
                     isChecked={isFavorite}
@@ -368,19 +425,27 @@ export default function App() {
               </VStack>
             </ModalBody>
             <ModalFooter borderTopWidth="$0">
-              <VStack space="lg" w="$full">
-                <Button onPress={handleModifyResource}>
-                  <ButtonText>Submit</ButtonText>
-                </Button>
-
+              <VStack space="lg" w="$full" alignItems="center">
+                <Link href="/home/">
+                  <Pressable
+                    onPress={handleModifyResource}
+                    accessibilityLabel="Button to submit and modify a resource"
+                    style={styles.button}
+                  >
+                    <Text>Confirmer la modification</Text>
+                  </Pressable>
+                </Link>
+                <Text style={{ textAlign: 'center' }}>
+                  Si vous souhaitez supprimer cette ressource cliquez
+                  ci-dessous 👇
+                </Text>
                 <Link href="/home/">
                   <Pressable
                     style={{
+                      borderRadius: 12,
                       backgroundColor: 'red',
-                      padding: 10,
-                      borderRadius: 5,
+                      padding: 12,
                       width: '100%',
-                      alignItems: 'center',
                     }}
                     onPress={async () => {
                       try {
@@ -398,17 +463,6 @@ export default function App() {
                     </Text>
                   </Pressable>
                 </Link>
-
-                <HStack space="xs" alignItems="center">
-                  <Button
-                    variant="link"
-                    size="sm"
-                    onPress={() => setShowModal(false)}
-                  >
-                    <ButtonIcon as={ArrowLeftIcon} />
-                    <ButtonText>Back to main</ButtonText>
-                  </Button>
-                </HStack>
               </VStack>
             </ModalFooter>
           </ModalContent>
@@ -471,5 +525,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontWeight: '600',
     textDecorationLine: 'none',
+  },
+  button: {
+    borderRadius: 12,
+    padding: 12,
+    backgroundColor: 'grey',
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
   },
 });
