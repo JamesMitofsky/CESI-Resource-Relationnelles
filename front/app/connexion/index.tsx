@@ -38,8 +38,8 @@ import { AlertTriangle } from 'lucide-react-native';
 import SideContainerWeb from './SideContainerWeb';
 import axios from 'axios';
 import { BASE_URL } from '../../globals/port';
-import HeaderComponent from '../components/HeaderComponent';
-import ReturnButtonComponent from '../components/ReturnButtonComponent';
+import HeaderComponent from '../../components/HeaderComponent';
+import ReturnButtonComponent from '../../components/ReturnButtonComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const signInSchema = z.object({

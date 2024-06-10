@@ -1,48 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AddIcon,
   ArrowLeftIcon,
   Box,
   Center,
-  Checkbox,
-  Fab,
-  FabIcon,
-  FabLabel,
-  Heading,
-  HStack,
-  Input,
-  Select,
-  VStack,
+  Checkbox, Heading,
+  HStack, VStack,
   ModalBackdrop,
   ButtonText,
   ModalContent,
   ModalHeader,
   ButtonIcon,
-  CheckboxGroup,
-  InputField,
-  ModalBody,
+  CheckboxGroup, ModalBody,
   Modal,
   Button,
   ModalFooter,
   CheckboxIcon,
   CheckboxIndicator,
   CheckboxLabel,
-  CheckIcon,
-  SelectItem,
-  ChevronDownIcon,
-  Icon,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectIcon,
-  SelectInput,
-  SelectPortal,
-  SelectTrigger,
-  Toast,
+  CheckIcon, Toast,
   ToastTitle,
   useToast,
-  Image,
+  Image
 } from '@gluestack-ui/themed';
 import {
   Pressable,
@@ -59,8 +37,8 @@ import { Resource } from '../../types/resource';
 import { BASE_URL } from '../../globals/port';
 import { useMediaQuery } from 'react-responsive';
 import { Link } from 'expo-router';
-import HeaderComponent from '../components/HeaderComponent';
-import ReturnButtonComponent from '../components/ReturnButtonComponent';
+import HeaderComponent from '../../components/HeaderComponent';
+import ReturnButtonComponent from '../../components/ReturnButtonComponent';
 
 export default function App() {
   const [resources, setResources] = useState<Resource[]>([]);

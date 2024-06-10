@@ -38,7 +38,7 @@ import { Link as ExpoLink } from 'expo-router';
 import SideContainerWeb from '../SideContainerWeb';
 import axios from 'axios';
 import { BASE_URL } from '../../../globals/port';
-import HeaderComponent from '../../components/HeaderComponent';
+import HeaderComponent from '../../../components/HeaderComponent';
 const signUpSchema = z.object({
   name: z.string().min(1, 'Le nom est requis'),
   firstName: z.string().min(1, 'Le prénom est requis'),

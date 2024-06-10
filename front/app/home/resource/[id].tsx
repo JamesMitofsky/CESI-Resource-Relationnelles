@@ -22,37 +22,19 @@ import {
   CheckboxLabel,
   CheckIcon,
   Heading,
-  HStack,
-  Input,
-  InputField,
-  Image,
+  HStack, Image,
   ModalBackdrop,
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader,
-  Select,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectInput,
-  SelectItem,
-  SelectPortal,
-  SelectTrigger,
-  VStack,
-  Box,
-  AddIcon,
-  Fab,
-  FabIcon,
-  FabLabel,
+  ModalHeader, VStack,
+  Box
 } from '@gluestack-ui/themed';
 import { Resource } from '../../../types/resource';
 import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
-import { resolveHref } from 'expo-router/build/link/href';
 import { useMediaQuery } from 'react-responsive';
-import HeaderComponent from '../../components/HeaderComponent';
+import HeaderComponent from '../../../components/HeaderComponent';
 import { Picker } from '@react-native-picker/picker';
 
 export default function App() {

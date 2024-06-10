@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { AddIcon, ArrowLeftIcon, Box } from '@gluestack-ui/themed';
+import { Box } from '@gluestack-ui/themed';
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
 import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
@@ -14,8 +13,8 @@ import { useMediaQuery } from 'react-responsive';
 import { Link } from 'expo-router';
 import { UserInterface } from '../../types/user';
 import { jwtDecode } from 'jwt-decode';
-import HeaderComponent from '../components/HeaderComponent';
-import ReturnButtonComponent from '../components/ReturnButtonComponent';
+import HeaderComponent from '../../components/HeaderComponent';
+import ReturnButtonComponent from '../../components/ReturnButtonComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {

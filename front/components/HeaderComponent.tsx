@@ -12,7 +12,7 @@ const HeaderComponent = () => (
   >
     <Link href="/home/">
       <Image
-        source={require('../../assets/images/logo.png')}
+        source={require('../assets/images/logo.png')}
         accessibilityLabel="Logo"
       />
     </Link>

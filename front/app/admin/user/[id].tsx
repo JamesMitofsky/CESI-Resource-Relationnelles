@@ -14,47 +14,22 @@ import {
   Modal,
   ButtonText,
   Card,
-  Center,
-  Checkbox,
-  CheckboxGroup,
-  CheckboxIcon,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckIcon,
-  Heading,
-  HStack,
-  Input,
-  InputField,
-  Image,
-  ModalBackdrop,
+  Center, Heading,
+  HStack, ModalBackdrop,
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader,
-  Select,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectInput,
-  SelectItem,
-  SelectPortal,
-  SelectTrigger,
-  Toast,
+  ModalHeader, Toast,
   ToastTitle,
   useToast,
   VStack,
-  Box,
-  AddIcon,
-  Fab,
-  FabIcon,
-  FabLabel,
+  Box
 } from '@gluestack-ui/themed';
 import { UserInterface } from '../../../types/user';
 import { BASE_URL } from '../../../globals/port';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { resolveHref } from 'expo-router/build/link/href';
-import HeaderComponent from '../../components/HeaderComponent';
+import HeaderComponent from '../../../components/HeaderComponent';
 import { Picker } from '@react-native-picker/picker';
 import { useMediaQuery } from 'react-responsive';
 
