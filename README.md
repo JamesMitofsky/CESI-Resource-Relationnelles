@@ -8,7 +8,7 @@
 ### Prebuild
 
 ```bash
-npx expo prebuild  
+npx expo prebuild
 ```
 
 ```bash
@@ -18,6 +18,12 @@ npx expo prebuild
 ### EAS deployment
 
 * [Deployment patterns: two command flow (simplest)](https://docs.expo.dev/eas-update/deployment-patterns/#two-command-flow)
+
+```bash
+eas build:configure
+```
+Source: [Create eas.json](https://docs.expo.dev/tutorial/eas/configure-development-build/#configure-project-for-eas-build)
+
 
 # Debugging
 
