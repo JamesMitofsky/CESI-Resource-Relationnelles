@@ -129,5 +129,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-#docker compose
-.docker-compose.yml
+# Correct entry to ignore
+docker-compose.yml
