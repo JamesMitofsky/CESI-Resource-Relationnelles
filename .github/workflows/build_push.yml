@@ -34,6 +34,3 @@ jobs:
           file: ./front/Dockerfile
           push: true
           tags: mycontainerregistycesi.azurecr.io/front:latest
-
-      - name: Logout from Azure Container Registry
-        run: docker logout mycontainerregistycesi.azurecr.io
