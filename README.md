@@ -3,7 +3,13 @@
 ## Dockerize
 [Tutorial for dockerizing](https://medium.com/@ganiilhamirsyadi/dockerize-react-native-expo-app-152c1e65e76c)
 
-## Running the app
+## Building the app for a pipeline
+
+1. Info: [Different types of builds: dev, preview, prod](https://docs.expo.dev/build/eas-json/)
+   1. Info[Share with internal testers](https://docs.expo.dev/build/internal-distribution/)
+      1. An "ad hoc" distribution is not possible for free.
+2. [Building to a device is not possible. Do the build preview in the iOS simulator.](https://stackoverflow.com/a/78495688/5395435)
+   1. `eas build -p ios --profile preview --local`
 
 ### Prebuild
 
@@ -25,7 +31,18 @@ eas build:configure
 Source: [Create eas.json](https://docs.expo.dev/tutorial/eas/configure-development-build/#configure-project-for-eas-build)
 
 
+Build a local development version of the app
+```bash
+eas build --platform ios --local --profile development
+```
+[Source](https://docs.expo.dev/build-reference/local-builds/)
+
+
+
 # Debugging
+
+## iOS binary cannot be built without account
+https://docs.expo.dev/app-signing/local-credentials/#ios-credentials
 
 ## M1 Mac — error running pod install  (relating to prebuild)
 

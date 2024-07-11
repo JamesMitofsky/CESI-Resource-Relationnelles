@@ -2,9 +2,15 @@
   "cli": {
     "version": ">= 10.1.1"
   },
-    "build": {
-    "preview": {
+  "build": {
+    "development": {
       "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
     }
   }
 }
