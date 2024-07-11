@@ -40,3 +40,9 @@ Source: [Create eas.json](https://docs.expo.dev/tutorial/eas/configure-developme
 ### Current debugging
 
 After doing step 4 of the solutions, I tried step 5.
+
+
+# History of actions
+1. Try to configure cocoapods to work for prebuild. Didn't succeed.
+2. Reset the project to its initial state. Install `eas` again. This reinitialized the eas.json file.
+3. Modify this `eas.json` file to just be internal build as [described here](https://docs.expo.dev/tutorial/eas/internal-distribution-builds/#configure-preview-build-profile).
