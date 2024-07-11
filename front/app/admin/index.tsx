@@ -121,7 +121,7 @@ export default function App() {
                     }}
                     style={styles.linkButton}
                   >
-                    <Text>See User Details</Text>
+                    <Text>Voir les détails</Text>
                   </Link>
                 </Card>
               ))}
