@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@gluestack-ui/themed';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 import { Card } from '@gluestack-ui/themed';
 import { BASE_URL } from '../../globals/port';
@@ -85,6 +80,9 @@ export default function App() {
                   ? `Utilisateur non identifié. Veuillez vous connecter.`
                   : `Bienvenue ${decodedToken.name} | Votre role: ${decodedToken.role}`}
               </Text>
+              <Link href="../statistics/" style={styles.linkButton}>
+                <Text>Voir les statistiques</Text>
+              </Link>
             </Box>
             <ReturnButtonComponent />
             {!decodedToken && (

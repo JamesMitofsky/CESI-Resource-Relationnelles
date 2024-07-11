@@ -159,4 +159,26 @@ async function getResource(req, res, next) {
   next();
 }
 
+// @route   GET api/resources/most-commented
+// @desc    Get resources sorted by the number of comments
+router.get("/most-commented", async (req, res) => {
+  try {
+    const resources = await Resource.find().sort({ "comments.length": -1 });
+    res.json(resources);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// @route   GET api/resources/most-visited
+// @desc    Get resources sorted by the number of visits
+router.get("/most-visited", async (req, res) => {
+  // Assuming you have a 'visits' field in your Resource model
+  try {
+    const resources = await Resource.find().sort({ visits: -1 });
+    res.json(resources);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
