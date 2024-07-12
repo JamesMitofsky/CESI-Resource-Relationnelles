@@ -3,7 +3,7 @@ name: Build and Push Docker images to Azure Container Registry
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   build_and_push:
