@@ -1,4 +1,4 @@
-name: Build and Push Docker images to Azure Container Registry
+name: Develop Build
 
 on:
   push:
