@@ -12,6 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Backend dependencies
+        run: npm install
+        working-directory: back-end
+
       - name: Run Backend tests
         run: npm test
         working-directory: back-end
