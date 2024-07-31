@@ -15,7 +15,7 @@ router.post("/login", async (req, res) => {
   // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({ email: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
 
   // Check password
@@ -38,7 +38,7 @@ router.post("/login", async (req, res) => {
         }
       );
     } else {
-      return res.status(400).json({ password: "Password incorrect" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
   });
 });
@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
   // Check if email already exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(400).json({ error: "Email already exists" });
+    return res.status(400).json({ message: "Email already exists" });
   }
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, saltRounds);
