@@ -13,7 +13,10 @@ app.use("/api/users", userRoutes);
 describe("User Routes", () => {
   beforeAll(async () => {
     // Connect to the database using the environment variable
-    const url = process.env.MONGODB_Test;
+    // const url = process.env.MONGODB_Test;
+    const url =
+      "mongodb+srv://admin:erty123@cluster0.nrmqrkm.mongodb.net/Ressources-Relationnelles-Test?retryWrites=true&w=majority";
+
     await mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
