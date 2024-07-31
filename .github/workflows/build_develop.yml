@@ -12,6 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Run Backend tests
+        run: npm test
+        working-directory: back-end
+
       - name: Log in to Azure Container Registry
         uses: docker/login-action@v2
         with:
